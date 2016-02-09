@@ -4,6 +4,7 @@
 #include <SDL.h>
 #include <SDL_opengl.h>
 #include <SDL_image.h>
+#include "Matrix.h"
 #include "ShaderProgram.h"
 
 #define PI 3.14159265
@@ -25,21 +26,21 @@ GLuint LoadTexture(const char *img){
 	GLuint textureID;
 	glGenTextures(1, &textureID);
 	glBindTexture(GL_TEXTURE_2D, textureID);
-	glTexImage2D(GL_TEXTURE_2D, 0, 4, surface->w, surface->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, surface->pixels);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, surface->w, surface->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, surface->pixels);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	SDL_FreeSurface(surface);
 	return textureID;
 }
 
-void draw(GLuint texture, float x, float y, float scale, float rotation = 0){
+void draw(GLuint& texture, float x, float y, float scale, float rotation = 0){
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, texture);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	glTranslatef(x, y, 0.0);
-	glRotatef(rotation, 0.0, 0.0, 0.0);
-	GLfloat coord[] = { 0.0f, 0.1f, 0.0f, -0.1f, 0.0f, 0.1f, 0.0f, 0.1f);
+	glRotatef(rotation, 0.0, 0.0, 0.0); 
+	GLfloat coord[] = { 0.0f, 0.1f, 0.0f, -0.1f, 0.0f, 0.1f, 0.0f, 0.1f };
 	glVertexPointer(2, GL_FLOAT, 0, coord);
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnable(GL_BLEND);
@@ -63,9 +64,9 @@ int main(int argc, char *argv[])
 	
 	//size and pixel offset
 	glViewport(0, 0, 640, 360);
+	GLuint texture1 = LoadTexture("street.png");
 	ShaderProgram program(RESOURCE_FOLDER"vertex_textured.glsl", RESOURCE_FOLDER"fragment_textured.glsl");
-	GLuint texture1 = LoadTexture("");
-
+	
 	Matrix projectionMatrix;
 	Matrix modelMatrix;
 	Matrix viewMatrix;
@@ -90,10 +91,12 @@ int main(int argc, char *argv[])
 			}
 		}
 		//tick tick tick
-		float ticks = (float)SDL_GetTicks / 1000.0f;
+		float ticks = (float)SDL_GetTicks() / 1000.0f;
 		float elapsed = ticks - lastFrameTicks;
 		lastFrameTicks = ticks;
 
+		//drawing
+		draw(texture1, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
 
