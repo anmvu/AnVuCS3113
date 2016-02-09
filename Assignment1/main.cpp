@@ -4,6 +4,9 @@
 #include <SDL.h>
 #include <SDL_opengl.h>
 #include <SDL_image.h>
+#include "ShaderProgram.h"
+
+#define PI 3.14159265
 
 #ifdef _WINDOWS
 	#define RESOURCE_FOLDER ""
@@ -60,8 +63,20 @@ int main(int argc, char *argv[])
 	
 	//size and pixel offset
 	glViewport(0, 0, 640, 360);
+	ShaderProgram program(RESOURCE_FOLDER"vertex_textured.glsl", RESOURCE_FOLDER"fragment_textured.glsl");
+	GLuint texture1 = LoadTexture("");
+
+	Matrix projectionMatrix;
+	Matrix modelMatrix;
+	Matrix viewMatrix;
+
 	//projection matrix
-	glMatrixMode(GL_PROJECTION);
+	projectionMatrix.setOrthoProjection(-3.55f, 3.55f, -2.0f, 2.0f, -1.0f, 1.0f);
+	glUseProgram(program.programID);
+	program.setModelMatrix(modelMatrix);
+	program.setProjectionMatrix(projectionMatrix);
+	program.setViewMatrix(viewMatrix);
+
 	//load identity matrix
 	glLoadIdentity();
 	glMatrixMode(GL_MODELVIEW);
