@@ -49,7 +49,7 @@ void draw(ShaderProgram& program, Matrix& modelMatrix, Matrix& projectionMatrix,
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	GLfloat vertices[] = { 1,1,-1,1,-1,-1,1,1,-1,-1,1,-1 };
+	GLfloat vertices[] = { 1, 1, -1, 1, -1, -1, 1, 1, -1, -1, 1, -1 };
 	glVertexAttribPointer(program.positionAttribute, 2, GL_FLOAT, false, 0, vertices);
 	glEnableVertexAttribArray(program.positionAttribute);
 
@@ -61,7 +61,7 @@ void draw(ShaderProgram& program, Matrix& modelMatrix, Matrix& projectionMatrix,
 	glDisableVertexAttribArray(program.positionAttribute);
 	glDisableVertexAttribArray(program.texCoordAttribute);
 
-	
+
 }
 
 void draw_background(ShaderProgram program, Matrix& modelMatrix, Matrix& projectionMatrix, Matrix& viewMatrix, GLuint texture){
@@ -115,6 +115,9 @@ int main(int argc, char *argv[])
 	GLuint car = LoadTexture("car.png",GL_RGBA);
 	GLuint moon = LoadTexture("moon.png",GL_RGBA);
 
+	float car_height = 4.0;
+	float car_width = 4.0;
+	float y = -2.0;
 
 	Matrix projectionMatrix, projectionMatrix2, projectionMatrix3;
 	Matrix modelMatrix, modelMatrix2, modelMatrix3;
@@ -143,11 +146,29 @@ int main(int argc, char *argv[])
 
 		//drawing
 		draw_background(program,modelMatrix,projectionMatrix,viewMatrix,street);
+		move_it(program, modelMatrix2, projectionMatrix2, viewMatrix2, 0, y);
+		modelMatrix2.Scale(car_width,car_height,0);
 		draw(program,modelMatrix2,projectionMatrix2,viewMatrix2,car);
+		move_it(program, modelMatrix3, projectionMatrix3, viewMatrix3, -3.0, 2.0);
 		draw(program,modelMatrix3,projectionMatrix3,viewMatrix3,moon);
-		move_it(program,modelMatrix3, projectionMatrix3, viewMatrix3, -3.0, 2.0);
+		
+		y += 0.05;
+		car_width = 1/car_width;
+		car_height = 1/car_height;
 
-	
+		if (y <= 2.0){
+			move_it(program, modelMatrix2, projectionMatrix2, viewMatrix2, 0, y);
+			modelMatrix2.Scale(car_width, car_height, 0);
+			y += 0.5;
+			car_width = 1 / car_width;
+			car_height = 1 / car_height;
+		}
+
+		move_it(program, modelMatrix2, projectionMatrix2, viewMatrix2, 0, -2.0);
+		car_width = 1 / car_width;
+		car_height = 1 / car_height;
+		modelMatrix2.Scale(car_width, car_height, 0);
+
 		glDisableClientState(GL_VERTEX_ARRAY);
 
 		SDL_GL_SwapWindow(displayWindow);
