@@ -38,32 +38,61 @@ GLuint LoadTexture(const char *img, int type){
 	return textureID;
 }
 
-void draw(ShaderProgram program,GLuint texture, float x, float y, float rotation = 0){
+void draw(ShaderProgram& program, Matrix& modelMatrix, Matrix& projectionMatrix, Matrix& viewMatrix, GLuint texture){
 	//Blend
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, texture);
-	
-	//program
-	glUseProgram(program.programID);
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-	glTranslatef(x, y, 0.0);
-	glRotatef(rotation, 0.0, 0.0, 0.0);
-	float vertices[] = { -1, -1, 1, -1, 1, 1 ,- 1, -1, 1, 1, -1, 1 };
-	glVertexAttribPointer(program.positionAttribute, 2, GL_FLOAT, false, 0, vertices);
-	glEnableVertexAttribArray(program.positionAttribute);
-	//screen is -3.55f, 3.55f, -2.0f, 2.0f
-	float coords[] = { 0.0, 0.0, 1.0, 0.0, 1.0, 1.0,0.0, 0.0, 1.0, 1.0, 0.0, 1.0 };
-	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glDisable(GL_TEXTURE_2D);
+
+	//Matrix
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+
+	GLfloat vertices[] = { 1,1,-1,1,-1,-1,1,1,-1,-1,1,-1 };
+	glVertexAttribPointer(program.positionAttribute, 2, GL_FLOAT, false, 0, vertices);
+	glEnableVertexAttribArray(program.positionAttribute);
+
+	GLfloat coords[] = { 0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 0.0, 1.0, 1.0, 0.0, 1.0 };
+	glEnableClientState(GL_VERTEX_ARRAY);
 	glVertexAttribPointer(program.texCoordAttribute, 2, GL_FLOAT, false, 0, coords);
 	glEnableVertexAttribArray(program.texCoordAttribute);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 	glDisableVertexAttribArray(program.positionAttribute);
 	glDisableVertexAttribArray(program.texCoordAttribute);
 
+	
+}
+
+void draw_background(ShaderProgram program, Matrix& modelMatrix, Matrix& projectionMatrix, Matrix& viewMatrix, GLuint texture){
+	//Blend
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	//screen is -3.55f, 3.55f, -2.0f, 2.0f
+	glUseProgram(program.programID);
+	program.setModelMatrix(modelMatrix);
+	program.setProjectionMatrix(projectionMatrix);
+	program.setViewMatrix(viewMatrix);
+	float vertices[] = { 3.55, 1.3,-3.55, 1.3, -3.55, -2.0 , 3.55, 1.3, -3.55, -2.0, 3.55, -2.0 };
+	glVertexAttribPointer(program.positionAttribute, 2, GL_FLOAT, false, 0, vertices);
+	glEnableVertexAttribArray(program.positionAttribute);
+	//screen is -3.55f, 3.55f, -2.0f, 2.0f
+	float coords[] = { 0.0, 0.0, 1.0, 0.0, 1.0, 1.0,0.0, 0.0, 1.0, 1.0, 0.0, 1.0 };
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glVertexAttribPointer(program.texCoordAttribute, 2, GL_FLOAT, false, 0, coords);
+	glEnableVertexAttribArray(program.texCoordAttribute);
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+	glDisableVertexAttribArray(program.positionAttribute);
+	glDisableVertexAttribArray(program.texCoordAttribute);
+
+}
+
+void move_it(ShaderProgram program, Matrix& modelMatrix, Matrix& projectionMatrix, Matrix& viewMatrix,float x, float y){
+	program.setModelMatrix(modelMatrix);
+	program.setProjectionMatrix(projectionMatrix);
+	program.setViewMatrix(viewMatrix);
+	modelMatrix.identity();
+	modelMatrix.Translate(x, y, 0.0);
 }
 
 int main(int argc, char *argv[])
@@ -83,21 +112,19 @@ int main(int argc, char *argv[])
 	glViewport(0, 0, 640, 360);
 	ShaderProgram program(RESOURCE_FOLDER"vertex_textured.glsl", RESOURCE_FOLDER"fragment_textured.glsl");
 	GLuint street = LoadTexture("street.png", GL_RGBA);
-	GLuint car = LoadTexture("car.png",GL_RGB);
+	GLuint car = LoadTexture("car.png",GL_RGBA);
 	GLuint moon = LoadTexture("moon.png",GL_RGBA);
 
-	Matrix projectionMatrix;
-	Matrix modelMatrix;
-	Matrix viewMatrix;
+
+	Matrix projectionMatrix, projectionMatrix2, projectionMatrix3;
+	Matrix modelMatrix, modelMatrix2, modelMatrix3;
+	Matrix viewMatrix, viewMatrix2, viewMatrix3;
 
 	//projection matrix
 	projectionMatrix.setOrthoProjection(-3.55f, 3.55f, -2.0f, 2.0f, -1.0f, 1.0f);
-	glUseProgram(program.programID);
-	
+	projectionMatrix2.setOrthoProjection(-3.55f, 3.55f, -2.0f, 2.0f, -1.0f, 1.0f);
+	projectionMatrix3.setOrthoProjection(-3.55f, 3.55f, -2.0f, 2.0f, -1.0f, 1.0f);
 
-	//load identity matrix
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
 	
 	float lastFrameTicks = 0.0f;
 
@@ -115,12 +142,10 @@ int main(int argc, char *argv[])
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		//drawing
-		program.setModelMatrix(modelMatrix);
-		program.setProjectionMatrix(projectionMatrix);
-		program.setViewMatrix(viewMatrix);
-		draw(program,street,0,0);
-		//draw(program, car);
-		//draw(program,moon);
+		draw_background(program,modelMatrix,projectionMatrix,viewMatrix,street);
+		draw(program,modelMatrix2,projectionMatrix2,viewMatrix2,car);
+		draw(program,modelMatrix3,projectionMatrix3,viewMatrix3,moon);
+		move_it(program,modelMatrix3, projectionMatrix3, viewMatrix3, -3.0, 2.0);
 
 	
 		glDisableClientState(GL_VERTEX_ARRAY);
