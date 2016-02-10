@@ -73,7 +73,7 @@ void draw_background(ShaderProgram program, Matrix& modelMatrix, Matrix& project
 	program.setModelMatrix(modelMatrix);
 	program.setProjectionMatrix(projectionMatrix);
 	program.setViewMatrix(viewMatrix);
-	float vertices[] = { 3.55, 1.3,-3.55, 1.3, -3.55, -2.0 , 3.55, 1.3, -3.55, -2.0, 3.55, -2.0 };
+	float vertices[] = { 3.55, 2.0,-3.55, 2.0, -3.55, -2.0 , 3.55, 2.0, -3.55, -2.0, 3.55, -2.0 };
 	glVertexAttribPointer(program.positionAttribute, 2, GL_FLOAT, false, 0, vertices);
 	glEnableVertexAttribArray(program.positionAttribute);
 	//screen is -3.55f, 3.55f, -2.0f, 2.0f
@@ -118,6 +118,7 @@ int main(int argc, char *argv[])
 	float car_height = 4.0;
 	float car_width = 4.0;
 	float y = -2.0;
+	float x = 0;
 
 	Matrix projectionMatrix, projectionMatrix2, projectionMatrix3;
 	Matrix modelMatrix, modelMatrix2, modelMatrix3;
@@ -153,16 +154,21 @@ int main(int argc, char *argv[])
 		draw(program,modelMatrix3,projectionMatrix3,viewMatrix3,moon);
 
 		if (y <= 2.0){
-			move_it(program, modelMatrix2, projectionMatrix2, viewMatrix2, 0, y);
-			modelMatrix2.Scale(car_width, car_height, 0);
 			y += elapsed*0.2;
-			/*car_width /= elapsed;
-			car_height /= elapsed;*/
+			move_it(program, modelMatrix2, projectionMatrix2, viewMatrix2, 0, y);
+			//can't figure out how to make the car in respect to time
+			car_width = 1/(car_width+elapsed);
+			car_height = 1/(car_height+elapsed);
+			modelMatrix2.Scale(car_width, car_height, 0);
 		}
 		else{
+			modelMatrix2.identity();
 			y = -2.0;
+			car_width = 4.0;
+			car_height = 4.0;
 			move_it(program, modelMatrix2, projectionMatrix2, viewMatrix2, 0, y);
 			modelMatrix2.Scale(car_width, car_height, 0);
+			draw(program, modelMatrix2, projectionMatrix2, viewMatrix2, car);
 		}
 
 
