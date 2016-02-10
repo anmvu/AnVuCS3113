@@ -151,23 +151,20 @@ int main(int argc, char *argv[])
 		draw(program,modelMatrix2,projectionMatrix2,viewMatrix2,car);
 		move_it(program, modelMatrix3, projectionMatrix3, viewMatrix3, -3.0, 2.0);
 		draw(program,modelMatrix3,projectionMatrix3,viewMatrix3,moon);
-		
-		y += 0.05;
-		car_width = 1/car_width;
-		car_height = 1/car_height;
 
 		if (y <= 2.0){
 			move_it(program, modelMatrix2, projectionMatrix2, viewMatrix2, 0, y);
 			modelMatrix2.Scale(car_width, car_height, 0);
-			y += 0.5;
-			car_width = 1 / car_width;
-			car_height = 1 / car_height;
+			y += elapsed*0.2;
+			/*car_width /= elapsed;
+			car_height /= elapsed;*/
+		}
+		else{
+			y = -2.0;
+			move_it(program, modelMatrix2, projectionMatrix2, viewMatrix2, 0, y);
+			modelMatrix2.Scale(car_width, car_height, 0);
 		}
 
-		move_it(program, modelMatrix2, projectionMatrix2, viewMatrix2, 0, -2.0);
-		car_width = 1 / car_width;
-		car_height = 1 / car_height;
-		modelMatrix2.Scale(car_width, car_height, 0);
 
 		glDisableClientState(GL_VERTEX_ARRAY);
 
