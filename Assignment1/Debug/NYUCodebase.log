@@ -1,5 +1,10 @@
+<<<<<<< HEAD
+﻿Build started 2/10/2016 10:48:27 PM.
+     1>Project "C:\Users\Annie Vuvu\Documents\game_programming\AnVuCS3113\Assignment1\NYUCodebase.vcxproj" on node 2 (Build target(s)).
+=======
 ﻿Build started 2/11/2016 4:53:21 PM.
      1>Project "D:\Google Drive\Senior\Game Programming\VuCS3113\Assignment1\NYUCodebase.vcxproj" on node 2 (Build target(s)).
+>>>>>>> 4ddaf902bf126786a48d686cb6b27e3d22dbc43a
      1>ClCompile:
          D:\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /IC:\SDL2\include /IC:\SDL2_image\include /IC:\glew\include /IC:\SDL2_mixer\include /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _WINDOWS /D _MBCS /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt main.cpp Matrix.cpp ShaderProgram.cpp
          ShaderProgram.cpp
@@ -21,4 +26,8 @@
 
 Build succeeded.
 
+<<<<<<< HEAD
+Time Elapsed 00:00:09.55
+=======
 Time Elapsed 00:00:12.70
+>>>>>>> 4ddaf902bf126786a48d686cb6b27e3d22dbc43a
