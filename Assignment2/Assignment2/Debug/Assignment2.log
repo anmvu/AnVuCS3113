@@ -1,4 +1,4 @@
-﻿Build started 2/16/2016 5:50:17 PM.
+﻿Build started 2/16/2016 6:30:39 PM.
      1>Project "D:\Google Drive\Senior\Game Programming\VuCS3113\Assignment2\Assignment2\Assignment2.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          D:\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /IC:\SDL2\include /IC:\SDL2_image\include /IC:\glew\include /IC:\SDL2_mixer\include /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _WINDOWS /D _MBCS /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt main.cpp
@@ -26,4 +26,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:09.28
+Time Elapsed 00:00:09.50

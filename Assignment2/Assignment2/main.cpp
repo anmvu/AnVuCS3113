@@ -68,9 +68,9 @@ void left_won(bool left_win = true){
 	ball.y = 0.0f;
 	ball.direction_x = left_win ? -1.0f : 1.0f;
 	ball.direction_y = 0.0f;
-	left.x = -1.0f;
+	left.x = -1.33f;
 	left.y = 0.0f;
-	right.x = 1.0f;
+	right.x = 1.33f;
 	right.y = 0.0f;
 	top_bumper.x = 0.0f;
 	top_bumper.y = 1.0f;
@@ -102,9 +102,9 @@ bool Play(){
 	//crasssh into meee
 
 	//ball to the right
-	if (((ball.x + ball.width * 0.5) > (right.x - right.width * 0.5)) &&
-		((ball.y + ball.height*0.5) > (right.y - right.height * 0.5)) &&
-		((ball.y - ball.height * 0.5) < (right.y + right.height * 0.5)))
+	if (((ball.x + ball.width * 0.5) >= (right.x - right.width * 0.5)) &&
+		((ball.y + ball.height*0.5) >= (right.y - right.height * 0.5)) &&
+		((ball.y - ball.height * 0.5) <= (right.y + right.height * 0.5)))
 		{
 			ball.x = (right.x - right.width * 0.5) - ball.width*0.5;
 			ball.direction_x = -ball.direction_x;
@@ -113,9 +113,9 @@ bool Play(){
 		}
 
 	//ball to the left
-	if (((ball.x - ball.width * 0.5) < (left.x + left.width * 0.5)) &&
-		((ball.y + ball.height*0.5) > (left.x - left.height * 0.5)) &&
-		((ball.y - ball.height * 0.5) < ( left.y + left.height * 0.5)))
+	if (((ball.x - ball.width * 0.5) <= (left.x + left.width * 0.5)) &&
+		((ball.y + ball.height*0.5) >= (left.x - left.height * 0.5)) &&
+		((ball.y - ball.height * 0.5) <= ( left.y + left.height * 0.5)))
 	{
 		ball.x = left.x + left.width * 0.5 + ball.width*0.5;
 		ball.direction_x = -ball.direction_x;
@@ -124,14 +124,14 @@ bool Play(){
 	}
 
 	//ball up
-	if ((ball.y + ball.height * 0.5) > (top_bumper.y - top_bumper.height * 0.5)){
-		ball.y = (top_bumper.y - top_bumper.height * 0.05) - (ball.height * 0.5);
+	if ((ball.y + ball.height * 0.5) >= (top_bumper.y - top_bumper.height * 0.5)){
+		ball.y = (top_bumper.y - top_bumper.height * 0.05) - (ball.height * 0.5) - 0.1;
 		ball.direction_y = -ball.direction_y;
 	}
 
-	//ball down
-	if ((ball.y - ball.height * 0.5) < (bottom_bumper.y + bottom_bumper.height * 0.5)){
-		ball.y = (bottom_bumper.y + bottom_bumper.height * 0.05) + (ball.height * 0.5);
+	//ball downS
+	if ((ball.y - ball.height * 0.5) <= (bottom_bumper.y + bottom_bumper.height * 0.5)){
+		ball.y = (bottom_bumper.y + bottom_bumper.height * 0.05) + (ball.height * 0.5) + 0.1;
 		ball.direction_y = -ball.direction_y;
 	}
 
