@@ -19,11 +19,9 @@ void Entity::draw(){
 
 	float quads[] = {
 		-width, height,
-		-width, height,
 		-width, -height,
-		width, height,
-		-width, -height,
-		width, -height
+		width,-height,
+		width,height
 	};
 
 	glVertexPointer(2,GL_FLOAT,0,quads);
