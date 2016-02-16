@@ -4,7 +4,7 @@
 class Entity{
 public:
 
-	Entity(float width = 1, float height = 1);
+	Entity(float width = 0.1f, float height = 0.1f);
 
 	void draw();
 

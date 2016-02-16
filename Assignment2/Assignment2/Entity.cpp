@@ -3,7 +3,7 @@
 #include <SDL_opengl.h>
 #include <SDL_image.h>
 
-Entity::Entity(float width = 0.1, float height = 0.1) : width(width), height(height){}
+Entity::Entity(float width, float height) : width(width), height(height){}
 
 
 void Entity::draw(){
