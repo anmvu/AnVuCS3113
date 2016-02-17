@@ -157,17 +157,18 @@ bool Play(){
 	if ((right.y - right.height * 0.5) < (bottom_bumper.y + bottom_bumper.height * 0.05)){
 		right.y = (bottom_bumper.y + bottom_bumper.height * 0.5) + (right.height * 0.5);
 	}
-	//right wins
+	//left wins
 	if (ball.x > (right.x + right.width)){
-		red = 0.0f;
-		green = 1.0f;
+		green = 0.0f;
+		red = 1.0f;
 		left_won(false);
 	}
 
-	//left wins
+	//right wins
 	if (ball.x < (left.x - left.width)){
-		green = 0.0f;
-		red = 1.0f;
+		
+		red = 0.0f;
+		green = 1.0f;
 		left_won(true);
 	}
 
