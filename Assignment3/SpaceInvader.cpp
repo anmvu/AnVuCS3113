@@ -61,6 +61,7 @@ void SpaceInvader::initGame(){
 	player.animation = 1.5f;
 	player.x = 0.0f;
 	player.y = -0.9f;
+	player.speed = 0.5f;
 	player.spriteIndex = 10;
 
 	float xEnemy = -0.6f;
@@ -70,6 +71,7 @@ void SpaceInvader::initGame(){
 	enemySpriteSheet = LoadTexture(enemy_sheet);
 	int enemyStartSpriteIndeces[4] = { 24,48,72,144 };
 	for (int i = 0; i < MAX_ENEMIES; i++){
+		enemies[i] = Entity();
 		int switchX = rand() % 2;
 		enemies[i].visible = true;
 		enemies[i].textureId = enemySpriteSheet;
@@ -77,7 +79,7 @@ void SpaceInvader::initGame(){
 		enemies[i].startSprite = randomIndex;
 		enemies[i].maxSprite = randomIndex + 2;
 		enemies[i].spriteIndex = enemies[i].startSprite;
-		enemies[i].speed = 0.1f;
+		enemies[i].animation = 0.1f;
 		enemies[i].lives = 2.0f;
 		enemies[i].yDir = -0.05f;
 		enemies[i].xDir = switchX ? float(rand() % 2 + 15) / 10 : -float(rand() % 2 + 15) / 10;
@@ -85,8 +87,8 @@ void SpaceInvader::initGame(){
 		enemies[i].x = xEnemy;
 		enemies[i].y = yEnemy;
 		
-		if ((i + 1) % 5 != 0){
-			xEnemy += 0.3f;
+		if ((i + 1) % 6){
+			xEnemy += 0.5f;
 		}
 		else{
 			xEnemy = -0.6f;
@@ -145,7 +147,9 @@ void SpaceInvader::renderGame(){
 	drawText(gameFontSheetTextureId, to_string(score), scoreSize, -0.02, 1.0f, 1.0f, 1.0f, 1.0f, -0.75, 0.9f);
 	//drawText(gameFontSheetTextureId, to_string(player.spriteIndex), 0.1f, -0.02f, 1.0f, 1.0f, 1.0f, 1.0f, -0.0, 0.9f);
 
-	if (totalEnemy == 0) drawText(gameFontSheetTextureId, "YOU WIN!", 0.2f, -0.01f, redTitle, greenTitle, blueTitle, 1.0f, -0.6f, 0.3f);
+	if (totalEnemy == 0){
+		drawText(gameFontSheetTextureId, "YOU WIN!", 0.2f, -0.01f, redTitle, greenTitle, blueTitle, 1.0f, -0.6f, 0.3f);
+	}
 
 	player.drawFromSprite(3, 4);
 
@@ -204,18 +208,23 @@ void SpaceInvader::updateGame(float elapsed){
 			if (event.key.keysym.scancode == SDL_SCANCODE_SPACE && !event.key.repeat){
 				playerShoot();
 			}
+			else if (totalEnemy == 0 && event.key.keysym.scancode == SDL_SCANCODE_RETURN){
+				state = 2;
+			}
 		}
 	}
 
 	const int playerLeft[] = { 3, 4, 5 };
 	const int playerRight[] = { 6, 7, 8 };
 
-	if (keys[SDL_SCANCODE_LEFT] || keys[SDL_SCANCODE_A]){
+	if (keys[SDL_SCANCODE_LEFT]){
 		player.xDir = -1.0f;
 		if (player.x < -1.33f) { player.x = 1.33f; }
 	}
 	
-	else if (keys[SDL_SCANCODE_RIGHT] || keys[SDL_SCANCODE_D]){
+
+
+	else if (keys[SDL_SCANCODE_RIGHT]){
 		player.xDir = 1.0f;
 		if (player.x > 1.33f){ player.x = -1.33f; }
 	}
@@ -240,11 +249,11 @@ void SpaceInvader::updateGame(float elapsed){
 		enemies[i].spriteIndex += enemies[i].animation;
 		if (enemies[i].spriteIndex > enemies[i].maxSprite) enemies[i].spriteIndex = enemies[i].startSprite;
 
-		if (enemies[i].x > 1.33f){
-			enemies[i].x = -1.33f;
+		if (enemies[i].x >= 1.33f){
+			enemies[i].x = 1.33f;
 			enemies[i].xDir = -enemies[i].xDir;
 		}
-		if (enemies[i].x < 1.33f){
+		if (enemies[i].x <= -1.33f){
 			enemies[i].x = -1.33f;
 			enemies[i].xDir = -enemies[i].xDir;
 		}
@@ -255,14 +264,14 @@ void SpaceInvader::updateGame(float elapsed){
 				totalEnemy--;
 			}
 			else if (enemies[i].lives == 1){
-				enemies[i].speed = 0.6;
-				enemies[i].animation = 0.2f;
+				enemies[i].speed = 0.3;
+				//enemies[i].animation = 0.2f;
 				enemies[i].startSprite = 120;
 				enemies[i].maxSprite = 122;
 			}
 		}
 		
-		if (totalEnemy == 1) enemies[i].speed = 1.0f;
+		if (totalEnemy == 1) enemies[i].speed = 0.8f;
 
 		scoreDamper += 0.001f;
 
@@ -277,7 +286,7 @@ void SpaceInvader::updateGame(float elapsed){
 			}
 		}
 
-		if ((enemies[i].y == player.y) && (enemies[i].alive()))state = 2;
+		if ((collision(enemies[i],player) || (enemies[i].y == player.y)) && (enemies[i].alive()))state = 2;
 
 	}
 
@@ -310,7 +319,7 @@ bool SpaceInvader::updateAndRender(){
 }
 
 void SpaceInvader::playerShoot(){
-	player.spriteIndex = 10;
+	player.spriteIndex = 2;
 	playerShots[playerShotIndex].visible = true;
 	playerShots[playerShotIndex].x = player.x;
 	playerShots[playerShotIndex].y = player.y;
@@ -323,10 +332,10 @@ void SpaceInvader::playerShoot(){
 }
 
 bool SpaceInvader::collision(Entity point, Entity object){
-	return point.x < (object.x + (object.width*0.5)) &&
-		point.x >(object.x - (object.width * 0.5)) &&
-		point.y < (object.y + (object.height * 0.5)) &&
-		point.y >(object.y - (object.height * 0.5));
+	return point.x <= (object.x + (object.width*0.5)) &&
+		point.x >=(object.x - (object.width * 0.5)) &&
+		point.y <= (object.y + (object.height * 0.5)) &&
+		point.y >=(object.y - (object.height * 0.5));
 }
 
 GLuint SpaceInvader::LoadTexture(const char* image_path, GLenum image_format, GLint texParam) {
