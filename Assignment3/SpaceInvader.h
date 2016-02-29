@@ -41,6 +41,7 @@ public:
 	GLuint LoadTexture(const char* image_path, GLenum image_format = GL_BGRA, GLint texParam = GL_NEAREST);
 	void drawText(GLuint texture, std::string text, float size, float spacing, float r,
 		float g, float b, float a, float x, float y);
+	void drawBackground(GLuint texture);
 	
 private:
 	
@@ -52,6 +53,8 @@ private:
 	const Uint8* keys;
 	GLuint playerSpriteSheet;
 	GLuint enemySpriteSheet;
+	GLuint pokeballTexture;
+	GLuint backgroundTexture;
 	const char* titleFontSheetPath = "assets/fonts/pixel_font.png";
 	const char* gameFontSheetPath = "assets/fonts/pixel_font.png";
 	GLuint titleFontSheetTextureId;
@@ -64,6 +67,7 @@ private:
 	int totalEnemy;
 	Entity playerShots[MAX_PLAYER_SHOTS];
 	int playerShotIndex;
+	Entity gameBackground = Entity();
 	float increment;
 	int score;
 	bool slow;

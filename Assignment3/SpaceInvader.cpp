@@ -40,10 +40,10 @@ SpaceInvader::SpaceInvader(){
 	titleFontSheetTextureId = LoadTexture(titleFontSheetPath);
 	gameFontSheetTextureId = LoadTexture(gameFontSheetPath);
 
-	/*
+	
 	redTitle = 1.0f;
 	greenTitle = 1.0f;
-	blueTitle = 1.0f;*/
+	blueTitle = 0.0f;
 	redEnter = 1.0f;
 	greenEnter = 1.0f;
 	blueEnter = 1.0f;
@@ -85,7 +85,7 @@ void SpaceInvader::initGame(){
 		enemies[i].x = xEnemy;
 		enemies[i].y = yEnemy;
 		
-		if ((i + 1) % 5){
+		if ((i + 1) % 5 != 0){
 			xEnemy += 0.3f;
 		}
 		else{
@@ -93,9 +93,17 @@ void SpaceInvader::initGame(){
 			yEnemy -= 0.2f;
 		}
 	}
+
+	const char* pokeball = "assets/pokeball.png";
+	pokeballTexture = LoadTexture(pokeball);
 	for (int i = 0; i < MAX_PLAYER_SHOTS; i++){
 		playerShots[i].visible = false;
+		playerShots[i].textureId = pokeballTexture;
 	}
+
+	const char* backgroundSheet = "assets/grass_tile.png";
+	backgroundTexture = LoadTexture(backgroundSheet);
+	gameBackground.textureId = backgroundTexture;
 
 }
 
@@ -131,14 +139,13 @@ void SpaceInvader::renderTitle(){
 }
 
 void SpaceInvader::renderGame(){
+	gameBackground.setSize(1, 1.5);
+	gameBackground.drawSprite();
 	drawText(gameFontSheetTextureId, "SCORE:", 0.1f, -0.02f, 1.0f, 1.0f, 1.0f, 1.0f, -1.25f, 0.9f);
 	drawText(gameFontSheetTextureId, to_string(score), scoreSize, -0.02, 1.0f, 1.0f, 1.0f, 1.0f, -0.75, 0.9f);
+	//drawText(gameFontSheetTextureId, to_string(player.spriteIndex), 0.1f, -0.02f, 1.0f, 1.0f, 1.0f, 1.0f, -0.0, 0.9f);
 
 	if (totalEnemy == 0) drawText(gameFontSheetTextureId, "YOU WIN!", 0.2f, -0.01f, redTitle, greenTitle, blueTitle, 1.0f, -0.6f, 0.3f);
-
-	redTitle = cos(increment / 10 * PI / 180);
-	greenTitle = cos(increment / 2 * PI / 180);
-	blueTitle = cos(increment * PI / 180);
 
 	player.drawFromSprite(3, 4);
 
@@ -150,6 +157,8 @@ void SpaceInvader::renderGame(){
 		playerShots[i].setSize(0.03, 0.03);
 		playerShots[i].drawSprite();
 	}
+
+	
 }
 
 void SpaceInvader::renderGameOver(){
@@ -178,9 +187,6 @@ void SpaceInvader::updateTitle(float elapsed){
 	}
 
 	if (keys[SDL_SCANCODE_RETURN]){
-		redEnter = cos(increment / 2 * PI / 180);
-		greenEnter = cos(increment / 3 * PI / 180);
-		blueEnter = cos(increment / 4 * PI / 180);
 		sizeEnter = 0.1f;
 	}
 
@@ -346,7 +352,6 @@ void SpaceInvader::drawText(GLuint texture, string text, float size, float spaci
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	glTranslatef(x, y, 0.0);
@@ -361,20 +366,23 @@ void SpaceInvader::drawText(GLuint texture, string text, float size, float spaci
 		float texture_x = (float)(((int)text[i]) % 16) / 16.0f;
 		float texture_y = (float)(((int)text[i]) / 16) / 16.0f;
 
-		colorData.insert(colorData.end(), { a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a });
-
+		//colorData.insert(colorData.end(), { r, g, b, a, r, g, b, a, r, g, b, a, r, g, b, a });
+		// a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a
 		vertexData.insert(vertexData.end(), { ((size + spacing) * i) + (-0.5f * size), 0.5f * size, ((size + spacing) * i) + (-0.5f * size), -0.5f * size, ((size + spacing) * i) + (0.5f * size), -0.5f * size, ((size + spacing) * i) + (0.5f * size), 0.5f * size });
 
 		texCoordData.insert(texCoordData.end(), { texture_x, texture_y, texture_x, texture_y + texture_size, texture_x + texture_size, texture_y + texture_size, texture_x + texture_size, texture_y });
 	}
 
-	glColorPointer(4, GL_FLOAT, 0, colorData.data());
+	for (int i = 0; i < text.size(); i++){
+		colorData.insert(colorData.end(), { r,g, b, a, r,g, b, a});
+	}
+
+	glColorPointer(3, GL_FLOAT, 8, colorData.data());
 	glEnableClientState(GL_COLOR_ARRAY);
 	glVertexPointer(2, GL_FLOAT, 0, vertexData.data());
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glTexCoordPointer(2, GL_FLOAT, 0, texCoordData.data());
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 	glDrawArrays(GL_QUADS, 0, text.size() * 4.0f);
-
 	glDisableClientState(GL_COLOR_ARRAY);
 }

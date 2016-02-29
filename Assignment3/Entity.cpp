@@ -49,7 +49,6 @@ void Entity::drawSprite(){
 
 }
 
-
 void Entity::drawFromSprite(int spriteX, int spriteY){
 	if (alive()){
 		glEnable(GL_TEXTURE_2D);
