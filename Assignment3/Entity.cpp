@@ -79,6 +79,7 @@ void Entity::drawFromSprite(int spriteX, int spriteY){
 			u + spriteWidth, v + spriteHeight,
 			u + spriteWidth, v
 		};
+
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glTexCoordPointer(2, GL_FLOAT, 0, coords);
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
