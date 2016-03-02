@@ -7,7 +7,7 @@
 #include "Entity.h"
 
 
-#define MAX_PLAYER_SHOTS 25
+#define MAX_PLAYER_SHOTS 10
 #define MAX_ENEMIES 44
 #define MAX_ENEMY_SHOTS 30
 

@@ -106,12 +106,13 @@ void SpaceInvader::initGame(){
 	}
 
 	rareEnemy.textureId = LoadTexture(enemy_sheet);
-	rareEnemy.visible = true;
+	rareEnemy.visible = false;
+	rareEnemy.lives = 1;
 	rareEnemy.y = 0.85;
 	rareEnemy.x = -1.33f;
 	rareEnemy.xDir = 1.0f;
 	rareEnemy.animation = 0.04f;
-	rareEnemy.speed = 0.8f;
+	rareEnemy.speed = 1.5f;
 	rareEnemy.spriteIndex = 168;
 	rareEnemy.startSprite = 168;
 	rareEnemy.maxSprite = 191;
@@ -288,12 +289,28 @@ void SpaceInvader::updateGame(float elapsed){
 	if (rareEnemy.spriteIndex > rareEnemy.maxSprite) rareEnemy.spriteIndex = rareEnemy.startSprite;
 	
 	//merr... how do I make the extra points guy mooove?
-	if (rand() % 7 == 0){
-		rareEnemy.visible = true;
-		rareEnemy.xDir = 1.0f;
-		rareEnemy.speed = 0.8f;
-		rareEnemy.move(elapsed);
+	if (!rareEnemy.alive()){
+		if (rand() % 419 == 0){
+			rareEnemy.visible = true;
+			if(rareEnemy.lives == 1){
+				rareEnemy.xDir = 1.0f;
+				rareEnemy.speed = 1.5f;
+				if (rareEnemy.x >= 1.33){
+					rareEnemy.x = -1.33;
+					rareEnemy.visible = false;
+				}
+				
+			}
+			else if (rareEnemy.lives == 0){
+				rareEnemy.x = -1.33;
+				rareEnemy.visible = false;
+				rareEnemy.move(elapsed);
+			}
+		}
+
 	}
+
+	rareEnemy.move(elapsed);
 	
 
 	for (int i = 0; i < MAX_ENEMIES; i++){
@@ -363,9 +380,10 @@ void SpaceInvader::updateGame(float elapsed){
 				else if (totalEnemy == 1)score += 300;
 				else score += 150;
 			}
-			if (playerShots[j].visible && rareEnemy.alive() && collision(playerShots[j], rareEnemy)){
+			if (playerShots[j].visible && rareEnemy.alive() && rareEnemy.lives == 1 && collision(playerShots[j], rareEnemy)){
 				playerShots[j].visible = false;
 				rareEnemy.die();
+				rareEnemy.lives--;
 				score += 300;
 			}
 		}
