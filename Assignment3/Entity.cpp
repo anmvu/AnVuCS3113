@@ -69,7 +69,7 @@ void Entity::drawFromSprite(int spriteX, int spriteY){
 		glEnableClientState(GL_VERTEX_ARRAY);
 
 		float u = (float)(((int)spriteIndex) % spriteX) / (float)spriteX;
-		float v = (float)(((int)spriteIndex) / spriteY) / (float)spriteY;
+		float v = (float)(((int)spriteIndex) / spriteX) / (float)spriteY;
 		float spriteWidth = 1.0 / (float)spriteX;
 		float spriteHeight = 1.0 / (float)spriteY;
 

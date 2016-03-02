@@ -18,7 +18,7 @@ using namespace std;
 #define MAX_PLAYER_SHOTS 15
 #endif
 #ifndef MAX_ENEMIES
-#define MAX_ENEMIES 15
+	#define MAX_ENEMIES 44
 #endif
 #ifndef MAX_ENEMY_SHOTS
 #define MAX_ENEMY_SHOTS 30
@@ -56,54 +56,75 @@ SpaceInvader::SpaceInvader(){
 
 void SpaceInvader::initGame(){
 	score = 0;
-	scoreDamper = 0.0f;
 	totalEnemy = MAX_ENEMIES;
 	const char* player_sheet = "assets/player.png";
 	playerSpriteSheet = LoadTexture(player_sheet);
 	player.textureId = playerSpriteSheet;
-	player.animation = 1.5f;
+	player.animation = 0.04f;
 	player.x = 0.0f;
 	player.y = -0.9f;
 	player.speed = 0.5f;
-	player.spriteIndex = 100;
+	player.spriteIndex = 10;
 
 	float xEnemy = -0.6f;
 	float yEnemy = 0.8f;
 
+	int start = 10;
+	int max = 12;
+
 	const char* enemy_sheet = "assets/pokemon.png";
 	enemySpriteSheet = LoadTexture(enemy_sheet);
-	int enemyStartSpriteIndeces[3] = { 144,145,146 };
 	for (int i = 0; i < MAX_ENEMIES; i++){
 		enemies[i] = Entity();
-		int switchX = rand() % 2;
 		enemies[i].visible = true;
 		enemies[i].textureId = enemySpriteSheet;
-		//float randomIndex = enemyStartSpriteIndeces[rand() % 3];
-		enemies[i].startSprite = 144;
-		enemies[i].maxSprite = 146;
+		enemies[i].startSprite = start;
+		enemies[i].maxSprite = max;
 		enemies[i].spriteIndex = enemies[i].startSprite;
 		enemies[i].animation = 0.03f;
 		enemies[i].lives = 2.0f;
 		enemies[i].yDir = -enemies[i].height;
-		enemies[i].xDir = switchX ? float(rand() % 2 + 15) / 10 : -float(rand() % 2 + 15) / 10;
-		enemies[i].speed = 0.02f;
+		enemies[i].xDir = 1.5f;
+		enemies[i].speed = 0.2f;
 		enemies[i].x = xEnemy;
 		enemies[i].y = yEnemy;
 		
-		if ((i + 1) % 6){
-			xEnemy += 0.5f;
-		}
-		else{
+		xEnemy += 0.2f;
+
+		if ((i + 1) % 11 == 0 ){
+			yEnemy -= 0.15f;
 			xEnemy = -0.6f;
-			yEnemy -= 0.2f;
+		}
+		if ((i + 1) % 5 == 0 && start!= 82){
+			start += 24;
+			max += 24;
+		}
+		else if (start == 82){
+			start = 10;
+			max = 12;
 		}
 	}
+
+	rareEnemy.textureId = LoadTexture(enemy_sheet);
+	rareEnemy.visible = true;
+	rareEnemy.y = 0.85;
+	rareEnemy.x = -1.33f;
+	rareEnemy.xDir = 1.0f;
+	rareEnemy.animation = 0.04f;
+	rareEnemy.speed = 0.8f;
+	rareEnemy.spriteIndex = 168;
+	rareEnemy.startSprite = 168;
+	rareEnemy.maxSprite = 191;
 
 	const char* pokeball = "assets/pokeball.png";
 	pokeballTexture = LoadTexture(pokeball);
 	for (int i = 0; i < MAX_PLAYER_SHOTS; i++){
 		playerShots[i].visible = false;
 		playerShots[i].textureId = pokeballTexture;
+	}
+
+	for (int i = 0; i < MAX_ENEMY_SHOTS; i++){
+		enemyShots[i].visible = false;
 	}
 
 	const char* backgroundSheet = "assets/grass_tile.png";
@@ -152,7 +173,6 @@ void SpaceInvader::renderGame(){
 	gameBackground.drawSprite();
 	drawText(gameFontSheetTextureId, "SCORE:", 0.1f, -0.02f, 1.0f, 1.0f, 1.0f, 1.0f, -1.25f, 0.9f);
 	drawText(gameFontSheetTextureId, to_string(score), scoreSize, -0.02, 1.0f, 1.0f, 1.0f, 1.0f, -0.75, 0.9f);
-	//drawText(gameFontSheetTextureId, to_string(player.spriteIndex), 0.1f, -0.02f, 1.0f, 1.0f, 1.0f, 1.0f, -0.0, 0.9f);
 
 	if (totalEnemy == 0){
 		drawText(gameFontSheetTextureId, "YOU WIN!", 0.2f, -0.01f, redTitle, greenTitle, blueTitle, 1.0f, -0.6f, 0.3f);
@@ -161,7 +181,10 @@ void SpaceInvader::renderGame(){
 
 	player.drawFromSprite(3,4);
 
+	rareEnemy.drawFromSprite(24, 8);
+
 	for (int i = 0; i < MAX_ENEMIES; i++){
+		//drawText(gameFontSheetTextureId, to_string(i), scoreSize, -0.02, 1.0f, 1.0f, 1.0f, 1.0f, -0.75f + i*0.1,0.7f);
 		enemies[i].drawFromSprite(24,8);
 	}
 	
@@ -170,6 +193,10 @@ void SpaceInvader::renderGame(){
 		playerShots[i].drawSprite();
 	}
 
+	for (int i = 0; i < MAX_ENEMY_SHOTS; i++){
+		enemyShots[i].setSize(0.01, 0.01);
+		enemyShots[i].drawSprite();
+	}
 	
 }
 
@@ -216,6 +243,12 @@ void SpaceInvader::updateGame(float elapsed){
 			if (event.key.keysym.scancode == SDL_SCANCODE_SPACE && !event.key.repeat){
 				playerShoot();
 			}
+
+			//meh I tried
+			else if (event.key.keysym.scancode == SDL_SCANCODE_LEFT || event.key.keysym.scancode == SDL_SCANCODE_RIGHT && !event.key.repeat){
+				player.spriteIndex += player.animation;
+				if (player.spriteIndex > player.maxSprite) player.spriteIndex = player.startSprite;
+			}
 			else if (totalEnemy == 0 && event.key.keysym.scancode == SDL_SCANCODE_RETURN){
 				state = 0;
 				initGame();
@@ -229,43 +262,80 @@ void SpaceInvader::updateGame(float elapsed){
 	if (keys[SDL_SCANCODE_LEFT]){
 		player.xDir = -1.0f;
 		if (player.x < -1.33f) { player.x = 1.33f; }
-
+		player.startSprite = playerLeft[0];
+		player.maxSprite = playerLeft[2];
+		player.spriteIndex = player.startSprite;
 	}
 	
-
-
 	else if (keys[SDL_SCANCODE_RIGHT]){
 		player.xDir = 1.0f;
 		if (player.x > 1.33f){ player.x = -1.33f; }
+		player.startSprite = playerRight[0];
+		player.maxSprite = playerRight[2];
+		player.spriteIndex = player.startSprite;
 	}
-	else player.xDir = 0.0f;
-	
+	else{ player.xDir = 0.0f; }
+	player.spriteIndex += player.animation;
+	if (player.spriteIndex > player.maxSprite) player.spriteIndex = player.startSprite;
 	player.move(elapsed);
 	
-	if (player.spriteIndex < 2){
-		player.spriteIndex += 0.2f;
-	}
 
 	for (int i = 0; i < MAX_PLAYER_SHOTS; i++) playerShots[i].move(elapsed); 
 
+	for (int i = 0; i < MAX_ENEMY_SHOTS; i++) enemyShots[i].move(elapsed);
+
+	rareEnemy.spriteIndex += rareEnemy.animation;
+	if (rareEnemy.spriteIndex > rareEnemy.maxSprite) rareEnemy.spriteIndex = rareEnemy.startSprite;
+	
+	//merr... how do I make the extra points guy mooove?
+	if (rand() % 7 == 0){
+		rareEnemy.visible = true;
+		rareEnemy.xDir = 1.0f;
+		rareEnemy.speed = 0.8f;
+		rareEnemy.move(elapsed);
+	}
+	
+
 	for (int i = 0; i < MAX_ENEMIES; i++){
-		//if (enemies[i].lives < 2 && slow){
-		//	for (int j = 0; j < MAX_ENEMIES; j++) enemies[j].speed = 0.5f;
-		//	slow = false;
-		//}
 
 		enemies[i].move(elapsed);
 		//enemies[i].move(elapsed);
 		enemies[i].spriteIndex += enemies[i].animation;
 		if (enemies[i].spriteIndex > enemies[i].maxSprite) enemies[i].spriteIndex = enemies[i].startSprite;
 
+		/*if ((i == 10 || (i+1)%11 == 0) && enemies[i].x >= 1.33f){*/
 		if (enemies[i].x >= 1.33f){
-			enemies[i].x = 1.33f;
+			enemies[i].x = 1.31;
+			enemies[i].startSprite -= 3;
+			enemies[i].maxSprite -= 3;
 			enemies[i].xDir = -enemies[i].xDir;
+			enemies[i].y -= 0.01;
+			/*
+				tried moving by row. didn't work out
+				for (int k = 0; k < 11; k++){
+				int index = i - k;
+				enemies[index].x = 1.33 - (0.2*k);
+				enemies[index].startSprite -= 3;
+				enemies[index].maxSprite -= 3;
+				enemies[index].xDir = -enemies[index].xDir;
+				enemies[index].y = yChange;
+			}*/
 		}
+		//if ((i == 0 || i % 11 == 0) && enemies[i].x <= -1.33f){
 		if (enemies[i].x <= -1.33f){
-			enemies[i].x = -1.33f;
+			enemies[i].x = -1.31;
+			enemies[i].startSprite += 3;
+			enemies[i].maxSprite += 3;
 			enemies[i].xDir = -enemies[i].xDir;
+			enemies[i].y -= 0.01;
+			/*for (int k = 0; k < 11; k++){
+				int index = i + k;
+				enemies[index].x = -1.33 + (0.2*k);
+				enemies[index].startSprite += 3;
+				enemies[index].maxSprite += 3;
+				enemies[index].xDir = -enemies[index].xDir;
+				enemies[index].y = yChange;
+			}*/
 		}
 
 		if (enemies[i].alive()){
@@ -274,32 +344,42 @@ void SpaceInvader::updateGame(float elapsed){
 				totalEnemy--;
 			}
 			else if (enemies[i].lives == 1){
-				enemies[i].animation = 0.2f;
+				enemies[i].animation = 0.15f;
 			}
+			int randomInt = rand() + 1;
+			int rand2 = rand() + 7;
+			if (randomInt % rand2 == 0) pokeShoot(i);
+			
 		}
 		
 		if (totalEnemy == 1) enemies[i].speed = 0.8f;
 
-		scoreDamper += 0.001f;
-
 		for (int j = 0; j < MAX_PLAYER_SHOTS; j++){
 			if (playerShots[j].visible && enemies[i].alive() && collision(playerShots[j], enemies[i])){
 				enemies[i].lives -= 1.0f;
+
 				playerShots[j].visible = false;
-				scoreSize = 0.2f;
-				if (enemies[i].lives == 1)score += 100 / scoreDamper;
-				else if (totalEnemy == 1)score += 300 / scoreDamper;
-				else score += 150 / scoreDamper;
+				if (enemies[i].lives == 1)score += 100;
+				else if (totalEnemy == 1)score += 300;
+				else score += 150;
+			}
+			if (playerShots[j].visible && rareEnemy.alive() && collision(playerShots[j], rareEnemy)){
+				playerShots[j].visible = false;
+				rareEnemy.die();
+				score += 300;
+			}
+		}
+
+		for (int k = 0; k < MAX_ENEMY_SHOTS; k++){
+			if (enemyShots[k].visible && collision(enemyShots[k], player)){
+				enemyShots[k].visible = false;
+				state = 2;
 			}
 		}
 
 		if ((collision(enemies[i],player) || (enemies[i].y <= player.y)) && (enemies[i].alive()))state = 2;
 
 	}
-
-	if (scoreSize > 0.1f) scoreSize -= 0.01f;
-	else scoreSize = 0.1f;
-
 
 }
 
@@ -326,7 +406,7 @@ bool SpaceInvader::updateAndRender(){
 }
 
 void SpaceInvader::playerShoot(){
-	player.spriteIndex = 2;
+	player.spriteIndex = 10;
 	playerShots[playerShotIndex].visible = true;
 	playerShots[playerShotIndex].x = player.x;
 	playerShots[playerShotIndex].y = player.y;
@@ -337,6 +417,19 @@ void SpaceInvader::playerShoot(){
 		playerShotIndex = 0;
 	}
 }
+
+void SpaceInvader::pokeShoot(int i){
+	enemyShots[enemyShotIndex].visible = true;
+	enemyShots[enemyShotIndex].x = enemies[i].x;
+	enemyShots[enemyShotIndex].y = enemies[i].y;
+	enemyShots[enemyShotIndex].yDir = -1.0f;
+	enemyShots[enemyShotIndex].speed = 2.0f;
+	enemyShotIndex++;
+	if (enemyShotIndex > MAX_ENEMY_SHOTS - 1){
+		enemyShotIndex = 0;
+	}
+}
+
 
 bool SpaceInvader::collision(Entity point, Entity object){
 	return point.x <= (object.x + (object.width*0.5)) &&
@@ -352,7 +445,7 @@ GLuint SpaceInvader::LoadTexture(const char* image_path, GLenum image_format, GL
 	glGenTextures(1, &textureID);
 	glBindTexture(GL_TEXTURE_2D, textureID);
 
-	glTexImage2D(GL_TEXTURE_2D, 0, 4, surface->w, surface->h, 0, image_format, GL_UNSIGNED_BYTE, surface->pixels);
+	glTexImage2D(GL_TEXTURE_2D, 0, 4, surface->w, surface->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, surface->pixels);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, texParam);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, texParam);
@@ -367,7 +460,7 @@ void SpaceInvader::drawText(GLuint texture, string text, float size, float spaci
 	glBindTexture(GL_TEXTURE_2D, texture);
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	glTranslatef(x, y, 0.0);
@@ -390,7 +483,7 @@ void SpaceInvader::drawText(GLuint texture, string text, float size, float spaci
 	}
 
 	for (int i = 0; i < text.size(); i++){
-		colorData.insert(colorData.end(), { r,g, b, a, r,g, b, a});
+		colorData.insert(colorData.end(), { r,g, b, a,r,g,b,a});
 	}
 
 	glColorPointer(3, GL_FLOAT, 8, colorData.data());

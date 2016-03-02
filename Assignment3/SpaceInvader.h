@@ -7,8 +7,8 @@
 #include "Entity.h"
 
 
-#define MAX_PLAYER_SHOTS 15
-#define MAX_ENEMIES 15
+#define MAX_PLAYER_SHOTS 25
+#define MAX_ENEMIES 44
 #define MAX_ENEMY_SHOTS 30
 
 #ifdef _WINDOWS
@@ -37,6 +37,7 @@ public:
 	void updateGameOver(float elapsed);
 
 	void playerShoot();
+	void pokeShoot(int i);
 	bool collision(Entity point, Entity object);
 	GLuint LoadTexture(const char* image_path, GLenum image_format = GL_BGRA, GLint texParam = GL_NEAREST);
 	void drawText(GLuint texture, std::string text, float size, float spacing, float r,
@@ -63,16 +64,18 @@ private:
 	float redTitle, greenTitle, blueTitle;
 	float redEnter, greenEnter, blueEnter, sizeEnter;
 	Entity player = Entity();
+	Entity rareEnemy = Entity();
 	Entity enemies[MAX_ENEMIES];
 	int totalEnemy;
 	Entity playerShots[MAX_PLAYER_SHOTS];
+	Entity enemyShots[MAX_ENEMY_SHOTS];
 	int playerShotIndex;
+	int enemyShotIndex;
 	Entity gameBackground = Entity();
 	float increment;
 	int score;
 	bool slow;
 	float scoreSize = 0.1f;
-	float scoreDamper;
 
 };
 
