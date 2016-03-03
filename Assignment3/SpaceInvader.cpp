@@ -276,8 +276,9 @@ void SpaceInvader::updateGame(float elapsed){
 		player.spriteIndex = player.startSprite;
 	}
 	else{ player.xDir = 0.0f; }
-	player.spriteIndex += player.animation;
-	if (player.spriteIndex > player.maxSprite) player.spriteIndex = player.startSprite;
+	//wanted to animate but it makes it doesn't really work and doesn't work as cool
+	/*player.spriteIndex += player.animation;
+	if (player.spriteIndex > player.maxSprite) player.spriteIndex = player.startSprite;*/
 	player.move(elapsed);
 	
 
@@ -326,7 +327,7 @@ void SpaceInvader::updateGame(float elapsed){
 			enemies[i].startSprite -= 3;
 			enemies[i].maxSprite -= 3;
 			enemies[i].xDir = -enemies[i].xDir;
-			enemies[i].y -= 0.01;
+			enemies[i].y -= 0.02;
 			/*
 				tried moving by row. didn't work out
 				for (int k = 0; k < 11; k++){
@@ -344,7 +345,7 @@ void SpaceInvader::updateGame(float elapsed){
 			enemies[i].startSprite += 3;
 			enemies[i].maxSprite += 3;
 			enemies[i].xDir = -enemies[i].xDir;
-			enemies[i].y -= 0.01;
+			enemies[i].y -= 0.02;
 			/*for (int k = 0; k < 11; k++){
 				int index = i + k;
 				enemies[index].x = -1.33 + (0.2*k);
@@ -365,7 +366,9 @@ void SpaceInvader::updateGame(float elapsed){
 			}
 			int randomInt = rand() + 1;
 			int rand2 = rand() + 7;
-			if (randomInt % rand2 == 0) pokeShoot(i);
+			if (randomInt % rand2 == 0) {
+				pokeShoot(i);
+			}
 			
 		}
 		
