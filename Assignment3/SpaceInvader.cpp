@@ -265,7 +265,7 @@ void SpaceInvader::updateGame(float elapsed){
 		if (player.x < -1.33f) { player.x = 1.33f; }
 		player.startSprite = playerLeft[0];
 		player.maxSprite = playerLeft[2];
-		player.spriteIndex = player.startSprite;
+		player.spriteIndex += player.animation;
 	}
 	
 	else if (keys[SDL_SCANCODE_RIGHT]){
@@ -273,14 +273,13 @@ void SpaceInvader::updateGame(float elapsed){
 		if (player.x > 1.33f){ player.x = -1.33f; }
 		player.startSprite = playerRight[0];
 		player.maxSprite = playerRight[2];
-		player.spriteIndex = player.startSprite;
+		player.spriteIndex += player.animation;
 	}
 	else{ player.xDir = 0.0f; }
-	//wanted to animate but it makes it doesn't really work and doesn't work as cool
-	/*player.spriteIndex += player.animation;
-	if (player.spriteIndex > player.maxSprite) player.spriteIndex = player.startSprite;*/
+
 	player.move(elapsed);
 	
+	if (player.spriteIndex > player.maxSprite && player.spriteIndex != 10) player.spriteIndex = player.startSprite;
 
 	for (int i = 0; i < MAX_PLAYER_SHOTS; i++) playerShots[i].move(elapsed); 
 
