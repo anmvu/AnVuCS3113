@@ -4,6 +4,7 @@
 #include <SDL.h>
 #include <SDL_opengl.h>
 #include <string>
+#include <SDL_mixer.h>
 #include "Entity.h"
 
 
@@ -76,7 +77,9 @@ private:
 	int score;
 	bool slow;
 	float scoreSize = 0.1f;
-
+	Mix_Music *music;
+	Mix_Chunk *shoot;
+	Mix_Chunk *collision_sound;
 };
 
 #endif

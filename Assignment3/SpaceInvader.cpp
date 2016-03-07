@@ -5,6 +5,7 @@
 #include <SDL.h>
 #include <SDL_opengl.h>
 #include <SDL_image.h>
+#include <SDL_mixer.h>
 
 #include "SpaceInvader.h"
 #include "Entity.h"
@@ -131,15 +132,23 @@ void SpaceInvader::initGame(){
 	const char* backgroundSheet = "assets/grass_tile.png";
 	backgroundTexture = LoadTexture(backgroundSheet);
 	gameBackground.textureId = backgroundTexture;
-
+	
+	music = Mix_LoadMUS("POL-code-geek-short.wav");
+	collision_sound = Mix_LoadWAV("collision.wav");
+	shoot = Mix_LoadWAV("shoot.wav");
+	Mix_PlayMusic(music, -1);
 }
 
 SpaceInvader::~SpaceInvader(){
+	Mix_FreeChunk(collision_sound);
+	Mix_FreeMusic(music);
+	Mix_FreeChunk(shoot);
 	SDL_Quit();
 }
 
 void SpaceInvader::init(){
 	SDL_Init(SDL_INIT_VIDEO);
+	Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 4096);
 	displayWindow = SDL_CreateWindow("Pokenvaders", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_OPENGL);
 	SDL_GLContext context = SDL_GL_CreateContext(displayWindow);
 	SDL_GL_MakeCurrent(displayWindow, context);
@@ -147,6 +156,8 @@ void SpaceInvader::init(){
 	#ifdef _WINDOWS
 		glewInit();
 	#endif
+
+	
 
 	glViewport(0, 0, 800, 600);
 	glMatrixMode(GL_PROJECTION);
@@ -174,7 +185,6 @@ void SpaceInvader::renderGame(){
 	gameBackground.drawSprite();
 	drawText(gameFontSheetTextureId, "SCORE:", 0.1f, -0.02f, 1.0f, 1.0f, 1.0f, 1.0f, -1.25f, 0.9f);
 	drawText(gameFontSheetTextureId, to_string(score), scoreSize, -0.02, 1.0f, 1.0f, 1.0f, 1.0f, -0.75, 0.9f);
-
 	if (totalEnemy == 0){
 		drawText(gameFontSheetTextureId, "YOU WIN!", 0.2f, -0.01f, redTitle, greenTitle, blueTitle, 1.0f, -0.6f, 0.3f);
 		drawText(titleFontSheetTextureId, "Press Enter", sizeEnter, -0.02f, redEnter, greenEnter, blueEnter, 1.0f, -0.35f, -0.3f);
@@ -198,7 +208,7 @@ void SpaceInvader::renderGame(){
 		enemyShots[i].setSize(0.01, 0.01);
 		enemyShots[i].drawSprite();
 	}
-	
+
 }
 
 void SpaceInvader::renderGameOver(){
@@ -256,7 +266,7 @@ void SpaceInvader::updateGame(float elapsed){
 			}
 		}
 	}
-
+	
 	const int playerLeft[] = { 3, 4, 5 };
 	const int playerRight[] = { 6, 7, 8 };
 
@@ -375,14 +385,16 @@ void SpaceInvader::updateGame(float elapsed){
 
 		for (int j = 0; j < MAX_PLAYER_SHOTS; j++){
 			if (playerShots[j].visible && enemies[i].alive() && collision(playerShots[j], enemies[i])){
+				Mix_PlayChannel(-1, collision_sound, 1);
 				enemies[i].lives -= 1.0f;
-
+				
 				playerShots[j].visible = false;
 				if (enemies[i].lives == 1)score += 100;
 				else if (totalEnemy == 1)score += 300;
 				else score += 150;
 			}
 			if (playerShots[j].visible && rareEnemy.alive() && rareEnemy.lives == 1 && collision(playerShots[j], rareEnemy)){
+				Mix_PlayChannel(-1, collision_sound, 1);
 				playerShots[j].visible = false;
 				rareEnemy.die();
 				rareEnemy.lives--;
@@ -427,6 +439,7 @@ bool SpaceInvader::updateAndRender(){
 
 void SpaceInvader::playerShoot(){
 	player.spriteIndex = 10;
+	Mix_PlayChannel(-1, shoot, 0);
 	playerShots[playerShotIndex].visible = true;
 	playerShots[playerShotIndex].x = player.x;
 	playerShots[playerShotIndex].y = player.y;
