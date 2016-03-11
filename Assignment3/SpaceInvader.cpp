@@ -133,7 +133,7 @@ void SpaceInvader::initGame(){
 	backgroundTexture = LoadTexture(backgroundSheet);
 	gameBackground.textureId = backgroundTexture;
 	
-	music = Mix_LoadMUS("POL-code-geek-short.wav");
+	music = Mix_LoadMUS("xy-wild-battle.mp3");
 	collision_sound = Mix_LoadWAV("collision.wav");
 	shoot = Mix_LoadWAV("shoot.wav");
 	Mix_PlayMusic(music, -1);
