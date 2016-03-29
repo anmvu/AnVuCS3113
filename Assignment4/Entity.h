@@ -5,40 +5,46 @@
 #include <SDL_opengl.h>
 #include <SDL_image.h>
 
+#include "SpriteSheet.h"
+
 class Entity{
 public:
 
-	Entity(GLuint textureID = 0, float width = 0.1f, float height = 0.1f,float x = 0.0f, float y = 0.0f, 
-		float angle = 0.0f, bool visible = true, float xScale = 1.0f, float yScale = 1.0f);
+	Entity();
 
+	void update(float elapsed);
+	void render();
+	bool collides(Entity* e);
+	void fixedUpdate();
 	void drawSprite();
 	void drawFromSprite(int spriteX, int spriteY);
+	float lerp(float v0, float v1, float t);
 
-	void setSize(float height, float width);
-	void scale(float scaleSize);
-	void die();
-	bool alive();
-	void move(float elapsed);
-
+	SheetSprite sprite;
 	GLuint textureId;
 	float spriteIndex;
-	int startSprite;
-	int maxSprite;
-	float speed;
-	float animation;
-	bool visible;
+	int spriteCountX;
+	int spriteCountY;
 	float x;
 	float y;
-	float xScale;
-	float yScale;
-	float rotation;
+
 	float width;
 	float height;
-	float angle;
-	float max_speed;
-	float xDir;
-	float yDir;
-	float lives;
+	float velocity_x;
+	float velocity_y;
+	float acceleration_x;
+	float acceleration_y;
+	float friction_x;
+	float friction_y;
+	float mass;
+	bool isStatic;
+
+	bool enableCollisions;
+
+	bool collidedTop;
+	bool collidedBottom;
+	bool collidedLeft;
+	bool collidedRight;
 
 };
 

@@ -6,14 +6,14 @@
 #include <SDL_image.h>
 #include "Matrix.h"
 #include "ShaderProgram.h"
-#include "SpaceInvader.h"
+#include "Platformer.h"
 
 /*
-Make Space Invader!
-2 Screens: Title and Game
-Display Text
-Use Sprite Sheets
-Any Graphics
+Make A Platformer!
+Use tilemap or static/dynamic entities
+scroll
+procedurally generated/load levels from a file.
+
 */
 
 #ifdef _WINDOWS
@@ -24,7 +24,7 @@ Any Graphics
 
 int main(int argc, char *argv[])
 {
-	SpaceInvader game;
+	PlatformerGame game;
 	while (!game.updateAndRender()) {}
 	return 0;
 }
