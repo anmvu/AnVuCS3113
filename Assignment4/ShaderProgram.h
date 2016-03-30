@@ -13,7 +13,8 @@
 class ShaderProgram {
     public:
         ShaderProgram(const char *vertexShaderFile, const char *fragmentShaderFile);
-        ~ShaderProgram();
+		ShaderProgram();
+		~ShaderProgram();
     
         void setModelMatrix(const Matrix &matrix);
         void setProjectionMatrix(const Matrix &matrix);

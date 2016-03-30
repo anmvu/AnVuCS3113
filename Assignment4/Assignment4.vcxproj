@@ -76,6 +76,7 @@
   <ItemGroup>
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Map.cpp" />
     <ClCompile Include="Matrix.cpp" />
     <ClCompile Include="Platformer.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
@@ -83,6 +84,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Entity.h" />
+    <ClInclude Include="Map.h" />
     <ClInclude Include="Matrix.h" />
     <ClInclude Include="Platformer.h" />
     <ClInclude Include="ShaderProgram.h" />
@@ -91,9 +93,12 @@
   <ItemGroup>
     <None Include="fragment.glsl" />
     <None Include="fragment_textured.glsl" />
+    <None Include="SDL2.dll" />
     <None Include="vertex.glsl" />
+    <None Include="vertex_textured.glsl" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="assets\alien_sheet.png" />
     <Image Include="assets\spritesheet.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

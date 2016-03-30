@@ -9,77 +9,31 @@
 #include <iostream>
 #include <vector>
 #include "Entity.h"
+#include "Map.h"
 using namespace std;
 
+#include "Matrix.h"
+#include "ShaderProgram.h"
+
+#ifdef _WINDOWS
+#define RESOURCE_FOLDER ""
+#else
+#define RESOURCE_FOLDER "NYUCodebase.app/Contents/Resources/"
+#endif
 
 PlatformerGame::PlatformerGame(){
 	init();
 	done = false;
 	lastFrameTicks = 0.0f;
 	keys = SDL_GetKeyboardState(nullptr);
+	sheet = "assets\alien_sheet.png";
 	buildLevel();
+	ShaderProgram p(RESOURCE_FOLDER"vertex_textured.glsl", RESOURCE_FOLDER"fragment_textured.glsl");
+	program = p;
 }
 
 PlatformerGame::~PlatformerGame(){
 	SDL_Quit();
-}
- 
-GLuint PlatformerGame::loadTexture(const char* image_path, GLenum image_format, GLint texParam) {
-	SDL_Surface *surface = IMG_Load("assets/alien_sheet.png");
-
-	GLuint textureID;
-	glGenTextures(1, &textureID);
-	glBindTexture(GL_TEXTURE_2D, textureID);
-
-	glTexImage2D(GL_TEXTURE_2D, 0, 4, surface->w, surface->h, 0, image_format, GL_UNSIGNED_BYTE, surface->pixels);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, texParam);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, texParam);
-
-	SDL_FreeSurface(surface);
-
-	return textureID;
-}
-
-void PlatformerGame::drawText(GLuint texture, string text, float size, float spacing, float r,
-	float g, float b, float a, float x, float y){
-	glBindTexture(GL_TEXTURE_2D, texture);
-	glEnable(GL_TEXTURE_2D);
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-	glTranslatef(x, y, 0.0);
-
-	float texture_size = 1.0 / 16.0f;
-
-	vector<float> vertexData;
-	vector<float> texCoordData;
-	vector<float> colorData;
-
-	for (int i = 0; i < text.size(); i++) {
-		float texture_x = (float)(((int)text[i]) % 16) / 16.0f;
-		float texture_y = (float)(((int)text[i]) / 16) / 16.0f;
-
-		//colorData.insert(colorData.end(), { r, g, b, a, r, g, b, a, r, g, b, a, r, g, b, a });
-		// a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a
-		vertexData.insert(vertexData.end(), { ((size + spacing) * i) + (-0.5f * size), 0.5f * size, ((size + spacing) * i) + (-0.5f * size), -0.5f * size, ((size + spacing) * i) + (0.5f * size), -0.5f * size, ((size + spacing) * i) + (0.5f * size), 0.5f * size });
-
-		texCoordData.insert(texCoordData.end(), { texture_x, texture_y, texture_x, texture_y + texture_size, texture_x + texture_size, texture_y + texture_size, texture_x + texture_size, texture_y });
-	}
-
-	for (int i = 0; i < text.size(); i++){
-		colorData.insert(colorData.end(), { r, g, b, a, r, g, b, a });
-	}
-
-	glColorPointer(3, GL_FLOAT, 8, colorData.data());
-	glEnableClientState(GL_COLOR_ARRAY);
-	glVertexPointer(2, GL_FLOAT, 0, vertexData.data());
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glTexCoordPointer(2, GL_FLOAT, 0, texCoordData.data());
-	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-	glDrawArrays(GL_QUADS, 0, text.size() * 4.0f);
-	glDisableClientState(GL_COLOR_ARRAY);
 }
 
 void PlatformerGame::handleCollisionX(Entity* entity, vector<Entity*> entities){
@@ -133,7 +87,6 @@ void PlatformerGame::init(){
 	displayWindow = SDL_CreateWindow("Assignment 4 Platformer", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_OPENGL);
 	SDL_GLContext context = SDL_GL_CreateContext(displayWindow);
 	SDL_GL_MakeCurrent(displayWindow, context);
-
 	#ifdef _WINDOWS
 		glewInit();
 	#endif
@@ -144,13 +97,13 @@ void PlatformerGame::init(){
 }
 
 void PlatformerGame::buildLevel(){
-
-	const char* sheet = "assets\alien_sheet.png";
-	GLuint appSpritesTexture = loadTexture("assets/alien_sheet.png");
+	GLuint appSpritesTexture = loadTexture(sheet);
 	int spriteCountX = 30;
-	int spriteCountY = 30;
-
-	player.spriteIndex = 79;
+	int spriteCountY = 16;
+	Map map(0.45,8,6, 5,3,2);
+	map.generateMap();
+	vector<pair<int,int>> treasures = map.placeTreasure(map.getMap());
+	player.spriteIndex = 19;
 	player.sprite = SheetSprite(appSpritesTexture, player.spriteIndex, spriteCountX, spriteCountY);
 	player.x = 0.0f; 
 	player.y = 0.0f;
@@ -167,8 +120,8 @@ void PlatformerGame::buildLevel(){
 
 	entities.push_back(&player);
 
-	vector<pair<float, float>> tileCoordinates;
-	float startFromLeft = -1.0f;
+	vector<pair<float,float>> tileCoordinates;
+	/*float startFromLeft = -1.0f;
 	float endAtRight = 1.0f;
 	while (startFromLeft < endAtRight + 0.1) {
 		tileCoordinates.push_back({ startFromLeft, -0.8f });
@@ -190,6 +143,17 @@ void PlatformerGame::buildLevel(){
 		tileCoordinates.push_back({ 1.0f, startFromTop });
 		startFromTop -= 0.1f;
 		startFromTop = roundf(startFromTop * 100) / 100;
+	}*/
+	for (int i = 0; i < map.getWidth(); i++){
+		for (int j = 0; j <map.getHeight(); j++){
+			if (map.getMap().at(i).at(j)){
+				float daX = ((float)i - (map.getWidth() / 2)) / map.getWidth();
+				float daY = ((float)j - (map.getHeight() / 2)) / map.getHeight();
+				//tileCoordinates.push_back({daWidth , 0 });
+				tileCoordinates.push_back({ daX, daY });
+
+			}
+		}
 	}
 
 	for (int i = 0; i < tileCoordinates.size(); i++) {
@@ -232,7 +196,7 @@ void PlatformerGame::render(){
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	for (size_t i = 0; i < entities.size(); i++) {
-		entities[i]->render();
+		entities[i]->render(program);
 	}
 
 	SDL_GL_SwapWindow(displayWindow);
@@ -298,4 +262,62 @@ void PlatformerGame::fixedUpdate() {
 			handleCollisionX(entities[i], entities);
 		}
 	}
+}
+
+GLuint PlatformerGame::loadTexture(const char* image_path, GLenum image_format, GLint texParam) {
+	SDL_Surface* surface = IMG_Load("alien_sheet.png");
+
+	GLuint textureID;
+	glGenTextures(1, &textureID);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, 4, surface->w, surface->h, 0, GL_RGB, GL_UNSIGNED_BYTE, surface->pixels);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, texParam);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, texParam);
+
+	SDL_FreeSurface(surface);
+
+	return textureID;
+}
+
+void PlatformerGame::drawText(GLuint texture, string text, float size, float spacing, float r,
+	float g, float b, float a, float x, float y){
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glEnable(GL_TEXTURE_2D);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	glTranslatef(x, y, 0.0);
+
+	float texture_size = 1.0 / 16.0f;
+
+	vector<float> vertexData;
+	vector<float> texCoordData;
+	vector<float> colorData;
+
+	for (int i = 0; i < text.size(); i++) {
+		float texture_x = (float)(((int)text[i]) % 16) / 16.0f;
+		float texture_y = (float)(((int)text[i]) / 16) / 16.0f;
+
+		//colorData.insert(colorData.end(), { r, g, b, a, r, g, b, a, r, g, b, a, r, g, b, a });
+		// a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a
+		vertexData.insert(vertexData.end(), { ((size + spacing) * i) + (-0.5f * size), 0.5f * size, ((size + spacing) * i) + (-0.5f * size), -0.5f * size, ((size + spacing) * i) + (0.5f * size), -0.5f * size, ((size + spacing) * i) + (0.5f * size), 0.5f * size });
+
+		texCoordData.insert(texCoordData.end(), { texture_x, texture_y, texture_x, texture_y + texture_size, texture_x + texture_size, texture_y + texture_size, texture_x + texture_size, texture_y });
+	}
+
+	for (int i = 0; i < text.size(); i++){
+		colorData.insert(colorData.end(), { r, g, b, a, r, g, b, a });
+	}
+
+	glColorPointer(3, GL_FLOAT, 8, colorData.data());
+	glEnableClientState(GL_COLOR_ARRAY);
+	glVertexPointer(2, GL_FLOAT, 0, vertexData.data());
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glTexCoordPointer(2, GL_FLOAT, 0, texCoordData.data());
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	glDrawArrays(GL_QUADS, 0, text.size() * 4.0f);
+	glDisableClientState(GL_COLOR_ARRAY);
 }

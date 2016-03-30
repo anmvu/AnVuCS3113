@@ -1,14 +1,15 @@
+#ifdef _WINDOWS
+#include <GL/glew.h>
+#endif
 #include "Entity.h"
 #include <SDL.h>
 #include <SDL_opengl.h>
 #include <SDL_image.h>
 
-#include "Entity.h"
-
 Entity::Entity() {}
 
-void Entity::render() {
-	sprite.Draw(width, height, x, y); 
+void Entity::render(ShaderProgram &program) {
+	sprite.draw(program,modelMatrix,projectionMatrix,viewMatrix, textureId,width,height,x,y,1);
 }
 
 float Entity::lerp(float v0, float v1, float t){

@@ -1,6 +1,8 @@
 
 #include "ShaderProgram.h"
 
+ShaderProgram::ShaderProgram(){}
+
 ShaderProgram::ShaderProgram(const char *vertexShaderFile, const char *fragmentShaderFile) {
     
     // create the vertex shader
