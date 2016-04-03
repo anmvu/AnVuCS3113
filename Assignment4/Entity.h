@@ -23,14 +23,11 @@ public:
 	void drawFromSprite(int spriteX, int spriteY);
 	float lerp(float v0, float v1, float t);
 
-	Matrix projectionMatrix;
-	Matrix modelMatrix;
-	Matrix viewMatrix;
 	SheetSprite sprite;
-	GLuint textureId;
 	float spriteIndex;
-	int spriteCountX;
-	int spriteCountY;
+	GLuint textureId;
+	/*int spriteCountX;
+	int spriteCountY;*/
 	float x;
 	float y;
 

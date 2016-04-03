@@ -14,13 +14,10 @@
 class SheetSprite {
 public:
 	SheetSprite();
-	SheetSprite(GLuint textureId, float spriteIndex, int spriteCountX, int spriteCountY); //uniform sheet
-	SheetSprite(GLuint textureId, float u, float v, float width, float height); //non-uniform sheet
+	SheetSprite(float spriteIndex, int spriteCountX, int spriteCountY); //uniform sheet
 
-	void draw(ShaderProgram& program, Matrix& modelMatrix, Matrix& projectionMatrix, Matrix& viewMatrix, GLuint texture, float objWidth, float objHeight, float x, float y, float scale);
+	void draw(ShaderProgram& program, GLuint textureId, float objWidth, float objHeight, float x, float y, float scale);
 
-	float scale;
-	GLuint textureId;
 	float u;
 	float v;
 	float width;

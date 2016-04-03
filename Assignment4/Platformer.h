@@ -34,10 +34,10 @@ public:
 	void render();
 	void update(float elapsed);
 	void fixedUpdate();
-	GLuint loadTexture(const char* image_path, GLenum image_format = GL_BGRA, GLint texParam = GL_NEAREST);
-	void drawText(GLuint fontTexture, std::string text, float size, float spacing, float r, float g, float b, float a, float x, float y);
-	ShaderProgram program;
-	
+	GLuint loadTexture(const char* image_path);
+	void drawText(ShaderProgram & program, int fontTexture, std::string text, float size, float spacing);
+	ShaderProgram* program;
+	Matrix modelMatrix, viewMatrix, projectionMatrix;
 
 private:
 	bool done;
