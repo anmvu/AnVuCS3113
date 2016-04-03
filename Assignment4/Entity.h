@@ -16,7 +16,7 @@ public:
 	Entity();
 
 	void update(float elapsed);
-	void render(ShaderProgram&program);
+	void render(ShaderProgram&program, Matrix&viewMatrix);
 	bool collides(Entity* e);
 	void fixedUpdate();
 	void drawSprite();

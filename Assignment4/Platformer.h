@@ -36,7 +36,7 @@ public:
 	void fixedUpdate();
 	GLuint loadTexture(const char* image_path);
 	void drawText(ShaderProgram & program, int fontTexture, std::string text, float size, float spacing);
-	ShaderProgram* program;
+	ShaderProgram program;
 	Matrix modelMatrix, viewMatrix, projectionMatrix;
 
 private:

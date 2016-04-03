@@ -1,4 +1,5 @@
 #include "SpriteSheet.h"
+#include "Matrix.h"
 
 SheetSprite::SheetSprite() {}
 
@@ -9,7 +10,7 @@ SheetSprite::SheetSprite(float spriteIndex, int spriteCountX, int spriteCountY) 
 	height = 1.0 / (float)spriteCountY;
 }
 
-void SheetSprite::draw(ShaderProgram& program, GLuint textureId, float objWidth, float objHeight, float x, float y, float scale) {
+void SheetSprite::draw(ShaderProgram& program, Matrix&modelMatrix, GLuint textureId, float objWidth, float objHeight, float x, float y, float scale) {
 	//Blend
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, textureId);
@@ -18,13 +19,15 @@ void SheetSprite::draw(ShaderProgram& program, GLuint textureId, float objWidth,
 	//Matrix
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	glTranslatef(x, y, 0.0);
+	modelMatrix.Translate(x, y, 0);
+	glTranslated(x, y, 0);
+	
 	GLfloat vertices[] = 
 	{    
-		-objWidth * scale, -objHeight * scale,// 1, 1,
-		objWidth * scale, objHeight * scale,// -1, 1,
-		-objWidth * scale, objHeight * scale,//-1, -1,
-		objWidth * scale, objHeight * scale// 1, 1,
+		objWidth * scale, objHeight * scale,// 1, 1,
+		-objWidth * scale, objHeight * scale,// -1, 1,
+		-objWidth * scale, -objHeight * scale,//-1, -1,
+		objWidth * scale, objHeight * scale,// 1, 1,
 		-objWidth * scale, -objHeight * scale,//-1, -1,
 		objWidth * scale, -objHeight * scale,//1, -1
 	};
@@ -33,12 +36,12 @@ void SheetSprite::draw(ShaderProgram& program, GLuint textureId, float objWidth,
 	glEnableVertexAttribArray(program.positionAttribute);
 
 	GLfloat coords[] = {  
-		u, v + height,
-		u + width, v,
-		u, v,
-		u + width, v,
-		u + width, v + height,
-		u + width, v + height
+		u, v,//00
+		u + width, v,//10
+		u, v + height,//11
+		u, v,//00
+		u + width, v + height,//11
+		u, v + height//01
 	};
 	glVertexAttribPointer(program.texCoordAttribute, 2, GL_FLOAT, false, 0, coords);
 	glEnableVertexAttribArray(program.texCoordAttribute);

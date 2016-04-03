@@ -31,6 +31,20 @@ ShaderProgram::ShaderProgram(const char *vertexShaderFile, const char *fragmentS
     
 }
 
+ShaderProgram::ShaderProgram(const ShaderProgram &source){
+	programID = source.programID;
+
+	projectionMatrixUniform = source.projectionMatrixUniform;
+	modelMatrixUniform = source.modelMatrixUniform;
+	viewMatrixUniform = source.viewMatrixUniform;
+
+	positionAttribute = source.positionAttribute;
+	texCoordAttribute = source.texCoordAttribute;
+
+	vertexShader = source.vertexShader;
+	fragmentShader = source.fragmentShader;
+}
+
 ShaderProgram::~ShaderProgram() {
     glDeleteProgram(programID);
     glDeleteShader(vertexShader);

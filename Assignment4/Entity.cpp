@@ -8,8 +8,8 @@
 
 Entity::Entity() {}
 
-void Entity::render(ShaderProgram &program) {
-	sprite.draw(program, textureId,width, height, x, y, 1);
+void Entity::render(ShaderProgram &program, Matrix& viewMatrix) {
+	sprite.draw(program,viewMatrix, textureId,width, height, x, y, 1);
 }
 
 float Entity::lerp(float v0, float v1, float t){

@@ -16,7 +16,7 @@ public:
 	SheetSprite();
 	SheetSprite(float spriteIndex, int spriteCountX, int spriteCountY); //uniform sheet
 
-	void draw(ShaderProgram& program, GLuint textureId, float objWidth, float objHeight, float x, float y, float scale);
+	void draw(ShaderProgram& program, Matrix & modelMatrix, GLuint textureId, float objWidth, float objHeight, float x, float y, float scale);
 
 	float u;
 	float v;

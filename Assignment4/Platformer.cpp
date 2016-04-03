@@ -28,6 +28,18 @@ PlatformerGame::PlatformerGame(){
 	keys = SDL_GetKeyboardState(nullptr);
 	sheet = "alien_sheet.png";
 	buildLevel();
+	ShaderProgram p(RESOURCE_FOLDER"vertex_textured.glsl", RESOURCE_FOLDER"fragment_textured.glsl");
+	program.programID = p.programID;
+
+	program.projectionMatrixUniform = p.projectionMatrixUniform;
+	program.modelMatrixUniform = p.modelMatrixUniform;
+	program.viewMatrixUniform = p.viewMatrixUniform;
+
+	program.positionAttribute = p.positionAttribute;
+	program.texCoordAttribute = p.texCoordAttribute;
+
+	program.vertexShader = p.vertexShader;
+	program.fragmentShader = p.fragmentShader;
 }
 
 PlatformerGame::~PlatformerGame(){
@@ -92,12 +104,12 @@ void PlatformerGame::init(){
 	glViewport(0, 0, 800, 600);
 	glMatrixMode(GL_PROJECTION);
 	glOrtho(-1.33, 1.33, -1.0, 1.0, -1.0, 1.0);
-	ShaderProgram p(RESOURCE_FOLDER"vertex_textured.glsl", RESOURCE_FOLDER"fragment_textured.glsl");
-	glUseProgram(p.programID);
-	p.setModelMatrix(modelMatrix);
-	p.setProjectionMatrix(projectionMatrix);
-	p.setViewMatrix(viewMatrix);
-	program = &p;
+	//ShaderProgram p(RESOURCE_FOLDER"vertex_textured.glsl", RESOURCE_FOLDER"fragment_textured.glsl");
+	glUseProgram(program.programID);
+	program.setModelMatrix(modelMatrix);
+	program.setProjectionMatrix(projectionMatrix);
+	program.setViewMatrix(viewMatrix);
+	//program = &p;
 }
 
 void PlatformerGame::buildLevel(){
@@ -149,7 +161,7 @@ void PlatformerGame::buildLevel(){
 		tiles[i].height = 0.01f;
 		tiles[i].isStatic = true;
 
-		entities.push_back(&tiles[i]);
+		//entities.push_back(&tiles[i]);
 	}
 }
 
@@ -176,10 +188,10 @@ bool PlatformerGame::updateAndRender(){
 void PlatformerGame::render(){
 	
 
-	ShaderProgram p = *program;
+	/*ShaderProgram p = *program;*/
 	for (size_t i = 0; i < entities.size(); i++) {
 		
-		entities[i]->render(*program);
+		entities[i]->render(program, modelMatrix);
 	}
 
 	SDL_GL_SwapWindow(displayWindow);
