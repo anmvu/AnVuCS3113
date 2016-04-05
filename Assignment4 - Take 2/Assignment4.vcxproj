@@ -79,6 +79,7 @@
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="Matrix.cpp" />
     <ClCompile Include="Platformer.cpp" />
+    <ClCompile Include="PlatformGame.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
     <ClCompile Include="SpriteSheet.cpp" />
   </ItemGroup>
@@ -87,6 +88,7 @@
     <ClInclude Include="Map.h" />
     <ClInclude Include="Matrix.h" />
     <ClInclude Include="Platformer.h" />
+    <ClInclude Include="PlatformGame.h" />
     <ClInclude Include="ShaderProgram.h" />
     <ClInclude Include="SpriteSheet.h" />
   </ItemGroup>
