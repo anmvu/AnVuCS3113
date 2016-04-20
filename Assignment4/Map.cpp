@@ -1,104 +1,101 @@
 #include "Map.h";
 
-Map::Map(float chance, int newWidth, int newHeight, int death, int birth, int numOfSteps){
-	chancetoStartAlive = chance;
-	width = newWidth;
-	height = newHeight;
-	deathLimit = deathLimit;
-	birthLimit = birthLimit;
-	numberOfSteps = numOfSteps;
-	vector<bool> heightv(height,false);
-	map = vector<vector<bool>>(width,heightv);
+void Map::readFromFile(){
+	ifstream infile(levels[level]);
+	string line;
+	while (getline(infile, line)){
+		if (line == "[header]"){
+			if (!readHeader(infile))return;
+		}
+		else if (line == "[layer]") readLayerData(infile);
+		else if (line == "[ObjectsLayer]") readEntityData(infile);
+	}
 }
 
-float Map::getChance(){
-	return this->chancetoStartAlive;
-}
-
-int Map::getWidth(){
-	return this->width;
-}
-
-int Map::getHeight(){
-	return this->height;
-}
-
-vector<vector<bool>> Map::initializeMap(vector<vector<bool>> map){
-	for (int x = 0; x < width; x++){
-		for (int y = 0; y < height; y++){
-			if (rand() < getChance()){
-				map.at(x).at(y) = true;
-			}
+bool Map::readHeader(ifstream &fs){
+	string line;
+	mapWidth = -1;
+	mapHeight = -1;
+	while (getline(fs, line)) {
+		if (line == "") { break; }
+		istringstream sStream(line);
+		string key, value;
+		getline(sStream, key, '=');
+		getline(sStream, value);
+		if (key == "width") {
+			mapWidth = atoi(value.c_str());
+		}
+		else if (key == "height"){
+			mapHeight = atoi(value.c_str());
 		}
 	}
-	return map;
-}
-
-int Map::countAliveNeighbors(vector<vector<bool>> map, int x, int y){
-	int count = 0;
-	for (int i = -1; i < 2; i++){
-		for (int j = -1; j < 2; j++){
-			int neighbor_x = x + i;
-			int neighbor_y = y + j;
-			if (i == 0 && j == 0){
-			}
-			else if (neighbor_x < 0 || neighbor_y < 0 || neighbor_x >= width  || neighbor_y >= height){
-				count = count + 1;
-			}
-			else if (neighbor_x >= 0 && neighbor_y >= 0 && neighbor_x < width && neighbor_y < height && map.at(neighbor_x).at(neighbor_y) == true); {
-				count = count + 1;
-			}
+	if (mapWidth == -1 || mapHeight == -1) {
+		return false;
+	}
+	else { // allocate our map data
+		levelData = new unsigned char*[mapHeight];
+		for (int i = 0; i < mapHeight; ++i) {
+			levelData[i] = new unsigned char[mapWidth];
 		}
+		return true;
 	}
-	return count;
 }
 
-vector<vector<bool>> Map::doSimulationStep(vector<vector<bool>> oldMap){
-	vector<vector<bool>> newMap(width, vector<bool>(height));
-	for (int x = 0; x < width; x++){
-		for (int y = 0; y < height; y++){
-			int nbs = countAliveNeighbors(oldMap, x, y);
-			if (oldMap.at(x).at(y)){
-				if (nbs < this->deathLimit) newMap.at(x).at(y) = false;
-				else newMap.at(x).at(y) = true;
-			}
-			else{
-				if (nbs > birthLimit) newMap[x][y] = true;
-				else newMap[x][y] = false;
-			}
-		}
-	}
-	return newMap;
-}
-
-vector<vector<bool>> Map::generateMap(){
-	map = initializeMap(map);
-	for (int i = 0; i < this->numberOfSteps; i++) {
-		map = doSimulationStep(map);
-	}
-	return map;
-}
-
-
-vector<pair<int,int>> Map::placeTreasure(vector<vector<bool>> world){
-	//How hidden does a spot need to be for treasure?
-	//I find 5 or 6 is good. 6 for very rare treasure.
-	int treasureHiddenLimit = 5;
-	vector<pair<int, int>> treasureCoords;
-	for (int x = 0; x < world.size()/world[0].size(); x++){
-		for (int y = 0; y < world[0].size(); y++){
-			if (!world[x][y]){
-				int nbs = countAliveNeighbors(world, x, y);
-				if (nbs >= treasureHiddenLimit){
-					pair<int, int>coord(x, y);
-					treasureCoords.push_back(coord);
+bool readLayerData(ifstream & fs){
+	string line;
+	while (getline(fs, line)) {
+		if (line == "") { break; }
+		istringstream sStream(line);
+		string key, value;
+		getline(sStream, key, '=');
+		getline(sStream, value);
+		if (key == "data") {
+			for (int y = 0; y < mapHeight; y++) {
+				getline(fs, line);
+				istringstream lineStream(line);
+				string tile;
+				for (int x = 0; x < mapWidth; x++) {
+					getline(lineStream, tile, ',');
+					unsigned char val = (unsigned char)atoi(tile.c_str());
+					if (val > 0) {
+						// be careful, the tiles in this format are indexed from 1 not 0
+						levelData[y][x] = val - 1;
+					}
+					else {
+						levelData[y][x] = 0;
+					}
 				}
 			}
 		}
 	}
-	return treasureCoords;
+	return true;
 }
 
-vector<vector<bool>> Map::getMap(){
-	return this->map;
+bool readEntityData(ifstream &fs){
+	string line;
+	string type;
+	while (getline(fs, line)) {
+		if (line == "") { break; }
+		istringstream sStream(line);
+		string key, value;
+		getline(sStream, key, '=');
+		getline(sStream, value);
+		if (key == "type") {
+			type = value;
+		}
+		else if (key == "location") {
+			istringstream lineStream(value);
+			string xPosition, yPosition;
+			getline(lineStream, xPosition, ',');
+			getline(lineStream, yPosition, ',');
+				float placeX = atoi(xPosition.c_str()) / 16 * TILE_SIZE;
+			float placeY = atoi(yPosition.c_str()) / 16 * -TILE_SIZE;
+			placeEntity(type, placeX, placeY);
+		}
+	}
+	return true;
+}
+
+void Map::placeEntity(string s, int x, int y){
+
 }

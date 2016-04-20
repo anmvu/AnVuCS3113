@@ -3,31 +3,32 @@
 
 #include <stdlib.h>
 #include <vector>
+#include <fstream>
+#include <string>
+#include <iostream>
+#include <sstream>
 using namespace std;
+
+#define TILE_SIZE 22
+#define LEVEL_HEIGHT 34
+#define LEVEL_WIDTH 42
 
 class Map{
 public:
-	Map(float chance, int newWidth, int newHeight, int death, int birth, int numOfSteps);
-	vector<vector<bool>> initializeMap(vector<vector<bool>> map);
-	int countAliveNeighbors(vector<vector<bool>> map, int x, int y);
-	vector<vector<bool>> doSimulationStep(vector<vector<bool>> oldmap);
-	vector<vector<bool>> generateMap();
-	float getChance();
-	int getHeight();
-	int getWidth();
-	vector<vector<bool>> getMap();
-	vector<pair<int, int>>placeTreasure(vector<vector<bool>> world);
+	~Map();
+	void readFromFile();
+	bool readHeader(ifstream &fs);
+	void readEntityData(ifstream &fs);
+	void readLayerData(ifstream &fs);
+	void placeEntity(string s, int x, int y);
+	unsigned char** levelData;
 	
 private:
-	float chancetoStartAlive;
-	float starvationLimit;
-	float overpopLimit;
-	int birthLimit;
-	int deathLimit;
-	int numberOfSteps;
-	int width;
-	int height;
-	vector <vector<bool>> map;
+	char* levels[3];
+	int level;
+	int mapWidth;
+	int mapHeight;
+	
 };
 
 

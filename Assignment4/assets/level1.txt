@@ -1,0 +1,493 @@
+[header]
+width=42
+height=34
+tilewidth=22
+tileheight=22
+orientation=orthogonal
+
+[tilesets]
+tileset=../../Assignment4/assets/alien_sheet.png,22,22,0,0
+
+[layer]
+type=Tile Layer 1
+data=
+35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,
+35,0,35,35,35,35,35,35,35,35,35,33,0,0,0,0,0,0,0,0,0,35,0,0,0,0,0,0,0,0,0,35,0,0,0,0,0,0,0,0,0,35,
+35,0,0,35,35,35,35,35,35,35,0,0,0,0,0,0,0,0,0,0,0,35,0,0,0,0,0,0,0,0,0,35,0,0,0,0,0,0,0,0,0,35,
+35,0,0,0,35,35,35,35,35,0,0,0,0,0,0,0,0,0,0,0,0,35,0,0,0,0,0,0,0,0,0,35,0,0,0,0,0,0,0,0,0,35,
+35,0,0,0,0,35,35,35,0,0,0,0,0,0,0,0,0,0,0,0,0,35,0,0,0,0,0,0,0,0,0,35,9,0,0,0,0,0,0,0,0,35,
+35,2,2,0,0,0,35,0,0,0,0,0,0,0,0,0,0,0,0,0,0,35,0,0,0,0,0,0,0,0,0,0,0,0,9,0,0,0,0,0,0,35,
+35,35,35,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,35,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,35,
+35,35,35,35,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,35,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,35,
+35,35,35,35,35,2,3,4,5,2,3,4,5,0,2,3,4,2,3,4,5,35,2,3,2,3,4,5,0,35,35,35,2,3,2,3,2,3,4,5,0,35,
+35,0,0,0,0,0,0,0,0,0,0,35,0,0,0,0,0,0,0,0,0,35,0,0,0,0,0,0,0,0,0,35,0,0,0,0,0,0,0,0,0,35,
+35,0,0,0,0,0,0,0,0,0,0,35,0,0,0,0,0,0,0,0,0,35,0,0,0,0,0,0,0,0,0,35,0,0,0,0,0,0,0,0,0,35,
+35,2,0,0,0,0,0,0,0,0,0,35,0,0,0,0,0,0,0,0,0,35,0,0,0,0,0,0,0,0,0,35,9,0,0,0,0,0,0,0,0,35,
+35,33,2,0,0,0,0,0,0,0,0,35,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,35,0,9,0,0,0,0,0,0,0,35,
+35,33,33,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,35,0,0,9,0,0,0,0,0,0,35,
+35,33,33,33,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,35,0,0,0,9,10,0,0,0,0,35,
+35,33,33,33,33,2,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,35,0,0,0,0,0,0,0,0,0,35,
+35,33,33,33,33,33,2,2,2,2,2,35,2,2,2,2,2,2,2,2,2,2,2,2,2,0,2,2,2,2,2,35,0,2,3,4,5,5,5,5,5,35,
+35,0,0,0,0,0,0,0,0,0,0,35,0,0,0,0,0,0,0,0,0,35,0,0,0,0,0,0,0,0,0,35,0,0,0,0,0,0,0,0,0,35,
+35,0,0,0,0,0,0,0,0,0,0,35,0,0,0,0,0,0,0,0,0,35,0,0,0,0,0,0,0,0,0,35,0,0,0,0,0,0,0,0,0,35,
+35,40,40,40,40,0,0,0,0,0,0,35,0,0,0,0,0,0,0,0,0,35,0,0,0,0,0,0,0,0,0,35,0,0,0,0,0,0,0,0,0,35,
+35,0,0,0,0,0,40,0,0,0,0,35,0,0,0,0,0,0,0,0,0,35,0,0,0,0,0,0,0,0,0,35,0,0,0,0,0,0,0,0,0,35,
+35,0,0,0,0,0,0,40,0,0,0,35,0,0,0,0,0,0,0,0,0,35,0,0,0,0,0,0,0,0,0,35,0,0,0,0,0,0,0,0,0,35,
+35,0,0,0,0,0,0,0,40,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,35,0,0,0,0,0,0,0,0,0,35,
+35,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,35,0,0,0,0,0,0,0,0,0,35,
+35,2,3,4,5,2,3,4,5,2,3,4,5,2,3,4,5,0,2,3,4,5,3,4,5,5,5,5,5,5,5,35,2,2,2,3,4,5,0,2,2,35,
+35,0,0,0,0,0,0,0,0,0,0,35,0,0,0,0,0,0,0,0,0,35,0,0,0,0,0,0,0,0,0,35,0,0,0,0,0,0,0,0,0,35,
+35,0,0,0,0,0,0,0,0,0,0,35,0,0,0,0,0,0,0,0,0,35,0,0,0,0,0,0,0,0,0,35,0,0,0,0,0,0,0,0,0,35,
+35,2,3,4,5,0,0,0,0,0,0,35,0,0,0,0,0,0,0,0,0,35,0,0,0,0,0,0,0,0,0,35,0,0,0,0,0,0,0,0,0,35,
+35,33,33,33,33,2,0,0,0,0,0,35,0,0,0,0,0,0,0,0,0,35,0,0,0,0,0,0,0,0,0,35,9,10,0,0,0,0,0,0,0,35,
+35,33,33,33,33,33,2,0,0,0,0,35,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,0,0,0,0,35,0,0,9,0,0,0,0,0,0,35,
+35,33,33,33,33,33,33,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,33,33,2,0,0,0,35,0,0,9,0,0,0,0,0,0,35,
+35,33,33,33,33,33,33,33,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,33,33,33,33,2,0,0,35,0,0,0,9,10,0,0,0,0,35,
+35,33,33,33,33,33,33,33,33,2,0,0,0,0,0,0,0,0,0,0,0,2,2,33,33,33,33,33,33,2,2,35,0,0,0,0,0,0,0,0,0,35,
+33,33,33,33,33,33,33,33,33,33,2,2,2,2,2,2,2,2,3,4,5,33,33,33,33,33,33,33,33,33,35,35,2,2,2,2,2,2,3,4,5,33
+
+[Spikes]
+# Spike
+type=Spike
+location=6,16,1,1
+
+[Spikes]
+# Spike
+type=Spike
+location=7,16,1,1
+
+[Spikes]
+# Spike
+type=Spike
+location=36,24,1,1
+
+[Spikes]
+# Spike
+type=Spike
+location=35,24,1,1
+
+[Spikes]
+# Spike
+type=Spike
+location=35,14,1,1
+
+[Spikes]
+# Spike
+type=Spike
+location=33,12,1,1
+
+[Spikes]
+# Spike
+type=Spike
+location=21,32,1,1
+
+[Spikes]
+# Spike
+type=Spike
+location=26,24,1,1
+
+[Spikes]
+# Spike
+type=Spike
+location=27,24,1,1
+
+[Spikes]
+# Spike
+type=Spike
+location=25,24,1,1
+
+[Diamonds]
+# Diamond1
+type=GreenDiamond
+location=1,10,1,1
+
+[Diamonds]
+# Diamond10
+type=BlueDiamond
+location=31,27,1,1
+
+[Diamonds]
+# Diamond8
+type=RedDiamond
+location=32,11,1,1
+
+[Diamonds]
+# Diamond3
+type=RedDiamond
+location=1,27,1,1
+
+[Diamonds]
+# Diamond5
+type=YellowDiamond
+location=29,24,1,1
+
+[Diamonds]
+# Diamond9
+type=GreenDiamond
+location=40,23,1,1
+
+[Diamonds]
+# Diamond4
+type=RedDiamond
+location=30,16,1,1
+
+[Diamonds]
+# Diamond7
+type=BlueDiamond
+location=32,3,1,1
+
+[Diamonds]
+# Diamond2
+type=GreenDiamond
+location=1,22,1,1
+
+[Diamonds]
+# Diamond6
+type=GreenDiamond
+location=29,32,1,1
+
+[Start]
+# Start
+type=Start
+location=1,5,1,1
+
+[Player]
+# Player
+type=Player
+location=1,4,1,1
+
+[Ladder]
+# Ladder
+type=Ladder
+location=13,9,1,1
+
+[Ladder]
+# Ladder
+type=Ladder
+location=13,9,1,1
+
+[Ladder]
+# Ladder
+type=Ladder
+location=13,10,1,1
+
+[Ladder]
+# Ladder
+type=Ladder
+location=13,11,1,1
+
+[Ladder]
+# Ladder
+type=Ladder
+location=13,12,1,1
+
+[Ladder]
+# Ladder
+type=Ladder
+location=13,13,1,1
+
+[Ladder]
+# Ladder
+type=Ladder
+location=13,14,1,1
+
+[Ladder]
+# Ladder
+type=Ladder
+location=13,15,1,1
+
+[Ladder]
+# Ladder
+type=Ladder
+location=13,16,1,1
+
+[Ladder]
+# Ladder
+type=Ladder
+location=28,9,1,1
+
+[Ladder]
+# Ladder
+type=Ladder
+location=28,9,1,1
+
+[Ladder]
+# Ladder
+type=Ladder
+location=28,10,1,1
+
+[Ladder]
+# Ladder
+type=Ladder
+location=28,11,1,1
+
+[Ladder]
+# Ladder
+type=Ladder
+location=28,12,1,1
+
+[Ladder]
+# Ladder
+type=Ladder
+location=28,13,1,1
+
+[Ladder]
+# Ladder
+type=Ladder
+location=28,14,1,1
+
+[Ladder]
+# Ladder
+type=Ladder
+location=28,16,1,1
+
+[Ladder]
+# Ladder
+type=Ladder
+location=28,15,1,1
+
+[Ladder]
+# Ladder
+type=Ladder
+location=24,17,1,1
+
+[Ladder]
+# Ladder
+type=Ladder
+location=24,17,1,1
+
+[Ladder]
+# Ladder
+type=Ladder
+location=24,18,1,1
+
+[Ladder]
+# Ladder
+type=Ladder
+location=24,19,1,1
+
+[Ladder]
+# Ladder
+type=Ladder
+location=24,20,1,1
+
+[Ladder]
+# Ladder
+type=Ladder
+location=24,21,1,1
+
+[Ladder]
+# Ladder
+type=Ladder
+location=24,22,1,1
+
+[Ladder]
+# Ladder
+type=Ladder
+location=24,23,1,1
+
+[Ladder]
+# Ladder
+type=Ladder
+location=24,23,1,1
+
+[Ladder]
+# Ladder
+type=Ladder
+location=17,25,1,1
+
+[Ladder]
+# Ladder
+type=Ladder
+location=17,25,1,1
+
+[Ladder]
+# Ladder
+type=Ladder
+location=17,26,1,1
+
+[Ladder]
+# Ladder
+type=Ladder
+location=17,27,1,1
+
+[Ladder]
+# Ladder
+type=Ladder
+location=17,28,1,1
+
+[Ladder]
+# Ladder
+type=Ladder
+location=17,29,1,1
+
+[Ladder]
+# Ladder
+type=Ladder
+location=17,30,1,1
+
+[Ladder]
+# Ladder
+type=Ladder
+location=17,32,1,1
+
+[Ladder]
+# Ladder
+type=Ladder
+location=17,31,1,1
+
+[Ladder]
+# Ladder
+type=Ladder
+location=40,9,1,1
+
+[Ladder]
+# Ladder
+type=Ladder
+location=40,9,1,1
+
+[Ladder]
+# Ladder
+type=Ladder
+location=40,10,1,1
+
+[Ladder]
+# Ladder
+type=Ladder
+location=40,11,1,1
+
+[Ladder]
+# Ladder
+type=Ladder
+location=40,12,1,1
+
+[Ladder]
+# Ladder
+type=Ladder
+location=40,13,1,1
+
+[Ladder]
+# Ladder
+type=Ladder
+location=40,14,1,1
+
+[Ladder]
+# Ladder
+type=Ladder
+location=40,15,1,1
+
+[Ladder]
+# Ladder
+type=Ladder
+location=40,15,1,1
+
+[Ladder]
+# Ladder
+type=Ladder
+location=32,17,1,1
+
+[Ladder]
+# Ladder
+type=Ladder
+location=32,17,1,1
+
+[Ladder]
+# Ladder
+type=Ladder
+location=31,18,1,1
+
+[Ladder]
+# Ladder
+type=Ladder
+location=31,19,1,1
+
+[Ladder]
+# Ladder
+type=Ladder
+location=31,20,1,1
+
+[Ladder]
+# Ladder
+type=Ladder
+location=31,21,1,1
+
+[Ladder]
+# Ladder
+type=Ladder
+location=31,22,1,1
+
+[Ladder]
+# Ladder
+type=Ladder
+location=31,23,1,1
+
+[Ladder]
+# Ladder
+type=Ladder
+location=31,23,1,1
+
+[Ladder]
+# Ladder
+type=Ladder
+location=38,25,1,1
+
+[Ladder]
+# Ladder
+type=Ladder
+location=38,25,1,1
+
+[Ladder]
+# Ladder
+type=Ladder
+location=38,26,1,1
+
+[Ladder]
+# Ladder
+type=Ladder
+location=38,27,1,1
+
+[Ladder]
+# Ladder
+type=Ladder
+location=38,28,1,1
+
+[Ladder]
+# Ladder
+type=Ladder
+location=38,29,1,1
+
+[Ladder]
+# Ladder
+type=Ladder
+location=38,30,1,1
+
+[Ladder]
+# Ladder
+type=Ladder
+location=38,33,1,1
+
+[Ladder]
+# Ladder
+type=Ladder
+location=38,31,1,1
+
+[Ladder]
+# Ladder
+type=Ladder
+location=38,32,1,1
+
+[Ladder]
+# Ladder
+type=Ladder
+location=17,32,1,1
+
+[Exit]
+# Exit
+type=Exit
+location=1,19,1,1
+
+[Exit]
+# Exit
+type=Exit
+location=1,18,1,1
+
