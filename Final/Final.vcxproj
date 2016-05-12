@@ -78,6 +78,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Matrix.cpp" />
     <ClCompile Include="Platformer.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
     <ClCompile Include="SpriteSheet.cpp" />
   </ItemGroup>
@@ -85,6 +86,7 @@
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Matrix.h" />
     <ClInclude Include="Platformer.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="ShaderProgram.h" />
     <ClInclude Include="SpriteSheet.h" />
   </ItemGroup>

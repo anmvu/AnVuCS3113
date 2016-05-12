@@ -23,17 +23,11 @@ procedurally generated/load levels from a file.
 #endif
 
 
-
-/*int main(int argc, char *argv[])
-{
-	PlatformerGame game;
-	while (!game.UpdateAndRender()) {}
-	return 0;
-
-}*/
-
-
 int main(int argc, char *argv[])
 {
-
+	ShaderProgram theProgram(RESOURCE_FOLDER"vertex_textured.glsl", RESOURCE_FOLDER"fragment_textured.glsl");
+	
+	PlatformerGame game(theProgram);
+	while (!game.updateAndRender()){}
+	return 0;
 }
