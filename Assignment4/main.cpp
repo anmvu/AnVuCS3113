@@ -25,6 +25,7 @@ procedurally generated/load levels from a file.
 int main(int argc, char *argv[])
 {
 	PlatformerGame game;
-	while (!game.updateAndRender()) {}
+	while (!game.UpdateAndRender()) {}
 	return 0;
+
 }

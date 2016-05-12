@@ -9,28 +9,26 @@
 
 #include "Matrix.h"
 #include "SpriteSheet.h"
+#include <string>
 
 class Entity{
 public:
 
 	Entity();
 
-	void update(float elapsed);
-	void render(ShaderProgram&program, Matrix&viewMatrix);
-	bool collides(Entity* e);
-	void fixedUpdate();
-	void drawSprite();
-	void drawFromSprite(int spriteX, int spriteY);
+	void Update(float elapsed);
+	void Render();
+
+	bool CollidesWith(Entity* entity);
+
+	void FixedUpdate();
+
 	float lerp(float v0, float v1, float t);
 
 	SheetSprite sprite;
-	float spriteIndex;
-	GLuint textureId;
-	/*int spriteCountX;
-	int spriteCountY;*/
+
 	float x;
 	float y;
-
 	float width;
 	float height;
 	float velocity_x;
@@ -48,6 +46,7 @@ public:
 	bool collidedBottom;
 	bool collidedLeft;
 	bool collidedRight;
+
 
 };
 

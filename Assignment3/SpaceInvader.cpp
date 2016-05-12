@@ -463,7 +463,6 @@ void SpaceInvader::pokeShoot(int i){
 	}
 }
 
-
 bool SpaceInvader::collision(Entity point, Entity object){
 	return point.x <= (object.x + (object.width*0.5)) &&
 		point.x >=(object.x - (object.width * 0.5)) &&
