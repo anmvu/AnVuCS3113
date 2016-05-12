@@ -31,8 +31,27 @@ using namespace std;
 
 class PlatformerGame{
 public:
+	PlatformerGame();
+	~PlatformerGame();
+	void init();
+	void initGame();
+	void updateAndRender();
+
+	void render();
+	void renderTitle();
+	void renderGame();
+	void renderGameOver();
+
+	void update(float elapsed);
+	void updateTitle(float elapsed);
+	void updateGame(float elapsed);
+	void updateGameOver(float elapsed);
+
+	void dropSpike();
 
 
+	GLuint LoadTexture(const char* imagepath, GLenum image_format = GL_BGRA, GLint texParam = GL_LINEAR);
+	void DrawText(ShaderProgram *program, int fontTexure, std::string text, float size, float spacing);
 };
 
 #endif
